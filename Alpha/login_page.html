@@ -1,22 +1,36 @@
 <!DOCTYPE html>
 <html>
 
+  <head>
+
+    <script>
+      function credCheck() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange=function() {
+          if (this.readyState == 4 && this.status == 200) {
+            document.getElementById("cred_data").innerHTML = this.responseText;
+          }
+        }
+        xhr.open("POST","/~mk343/page_handler.php",true);
+        xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+        var formData = new FormData( document.getElementById("login_form") );
+        xhr.send(formData);
+      }
+    </script>
+
+  </head>
+
   <body>
-    <form action="page_handler.php" method="post">
 
-      <div id="username">
-        Username: <input type="text" name="username">
-      </div>
-
-      <div id="password">
-        Password: <input type="text" name="password">
-      </div>
-
-      <div id="submit">
-        <input type="submit" value="Login">
-      </div>
-
+    <form id="login_form">
+      <input name="username" value="username"><br>
+      <input name="password" value="password"><br>
+      <input id="login_button" type="button" value="Login" onclick="credCheck()">
     </form>
+
+    <div id="cred_data">
+    </div>
+
   </body>
 
 </html>
