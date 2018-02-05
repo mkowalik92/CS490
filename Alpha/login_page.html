@@ -13,7 +13,8 @@
         }
         xhr.open("POST","/~mk343/page_handler.php",true);
         xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-        var formData = new FormData( document.getElementById("login_form") );
+        var formData = "username=" + document.getElementById('username').value + "&password=" + document.getElementById('password').value;
+        //console.log(formData)
         xhr.send(formData);
       }
     </script>
@@ -22,9 +23,9 @@
 
   <body>
 
-    <form id="login_form">
-      <input name="username" value="username"><br>
-      <input name="password" value="password"><br>
+    <form id="login-form">
+      <input name="username" value="username" id="username"><br>
+      <input name="password" value="password" id="password"><br>
       <input id="login_button" type="button" value="Login" onclick="credCheck()">
     </form>
 
