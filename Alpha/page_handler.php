@@ -4,8 +4,8 @@
 
   <body>
     <?php
-      $username = "mk343";
-      $password = "whatmypasswordishaha";
+      $username = $_POST["username"];
+      $password = $_POST["password"];
 
       $url = 'https://web.njit.edu/~bn62/verifyUCID.php';
 
