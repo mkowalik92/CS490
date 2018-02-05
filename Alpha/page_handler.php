@@ -4,19 +4,25 @@
 
   <body>
     <?php
+      $username = "mk343";
+      $password = "whatmypasswordishaha";
+
       $url = 'https://web.njit.edu/~bn62/verifyUCID.php';
-      $fields = array(
-        'username' => urlencode($_POST['username']),
-        'password' => urlencode($_POST['password'])
-      );
-      foreach ($fields as $key => $value) { $fields_string .= $key.'='.$value.'&'; }
-      rtrim($fields_string, '&');
+
+      $postData = array();
+      $postData['username'] = $username;
+      $postData['password'] = $password;
+
+      foreach ($postData as $key => $value) {
+        $post_items[] = $key . '=' . $value;
+      }
+      $post_string = implode('&', $post_items);
 
       $ch = curl_init();
 
       curl_setopt($ch,CURLOPT_URL, $url);
-      curl_setopt($ch,CURLOPT_POST, count($fields));
-      curl_setopt($ch,CURLOPT_POSTFIELDS, $fields_string);
+      curl_setopt($ch,CURLOPT_POST, 2);
+      curl_setopt($ch,CURLOPT_POSTFIELDS, $post_string);
 
       $result = curl_exec($ch);
 
