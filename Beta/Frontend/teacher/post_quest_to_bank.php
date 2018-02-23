@@ -21,7 +21,6 @@
   curl_setopt($ch,CURLOPT_POSTFIELDS, $JSONData);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
-  // The result I get here is a response from Bill's authenticator
   $JSONResult = curl_exec($ch);
 
   curl_close($ch);
