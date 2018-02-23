@@ -1,6 +1,7 @@
 <?php
   session_start();
-  echo $_SESSION['username'];
+  echo $_SESSION['username'] . ' ' .
+  $_SESSION['userId'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,6 +13,7 @@
 
   <body>
     <h1>Student Home Page</h1>
+    <input type="button" value="[GET]TestBank -> console">
     <input type="button" value="Logout" onclick="logout()">
   </body>
 
