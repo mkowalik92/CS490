@@ -33,12 +33,16 @@
     if ($json_decoded['user']['isInstructor'] == "true") {
       $_SESSION['username'] = $username;
       $_SESSION['loggedin'] = true;
+      $_SESSION['isInstructor'] = $json_decoded['user']['isInstructor'];
+      $_SESSION['userId'] = $json_decoded['user']['userId'];
       echo "TEACHER";
       exit();
     }
     if ($json_decoded['user']['isInstructor'] == "false") {
       $_SESSION['username'] = $username;
       $_SESSION['loggedin'] = true;
+      $_SESSION['isInstructor'] = $json_decoded['user']['isInstructor'];
+      $_SESSION['userId'] = $json_decoded['user']['userId'];
       echo "STUDENT";
       exit();
     }
