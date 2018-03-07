@@ -1,5 +1,16 @@
 var questionIds = [];
 var questionStrings = [];
+
+/* This is the array that all answers are saved in when the save answer button is pressed 
+   saveAnswer(questionId, rowCount) which is defined at the end is the function that populates
+   this array. You have to let me know what I should do with array when the submit exam/answers
+   button is pressed. I assume we loop through the answers array grading each answer at a time and
+   then when we are done we change the value of examSubmitted to 0 and remove it from the list of
+   exams that the student can take and add it to the exams shown on the teacher page of completed
+   exams with grades. Then the teacher can select the exam from the list of submitted/completed exams
+   and can choose to publish the grades with the ability to change the amount of points awarded for
+   question before submission.
+*/
 var answers = [];
 
 function goHome() {
