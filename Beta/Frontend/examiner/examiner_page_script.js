@@ -1,16 +1,5 @@
 var questionIds = [];
 var questionStrings = [];
-
-/* This is the array that all answers are saved in when the save answer button is pressed 
-   saveAnswer(questionId, rowCount) which is defined at the end is the function that populates
-   this array. You have to let me know what I should do with array when the submit exam/answers
-   button is pressed. I assume we loop through the answers array grading each answer at a time and
-   then when we are done we change the value of examSubmitted to 0 and remove it from the list of
-   exams that the student can take and add it to the exams shown on the teacher page of completed
-   exams with grades. Then the teacher can select the exam from the list of submitted/completed exams
-   and can choose to publish the grades with the ability to change the amount of points awarded for
-   question before submission.
-*/
 var answers = [];
 
 function goHome() {
@@ -49,7 +38,7 @@ function getExamQuestions(examId) {
           rowCount++;
           //selectCompletedExamsRow(" + json[i].examId + ", " + userId + ", this.id)
           textToTable += "<tr id='exam_question_row" + rowCount + "' onclick='selectQuestion(" + json[i].questionId + ", " + rowCount + ", this.id)'><td>Question " + rowCount + "</td></tr>";
-          questionIds.push(json[i].questionId);
+          //questionIds.push(json[i].questionId);
         }
       }
       textToTable += "</table>";
@@ -91,7 +80,7 @@ function selectQuestion(questionId, rowCounter, rowId) {
   } else {
     // does exist
     console.log(answers[questionId]);
-    var answer = answers[questionId];
+    var answer = decodeURIComponent(answers[questionId]);
     document.getElementById(answerTestAreaId).value = answer;
   }
 }
@@ -105,6 +94,7 @@ function getQuestions(examId) {
       for (var i = 0; i < json.length; i++) {
         if (json[i].examId == examId) {
           questionIds.push(json[i].questionId);
+          continue;
         }
       }
     }
@@ -136,6 +126,29 @@ function getQuestionStrings() {
 
 function saveAnswer(questionId, rowCount) {
   //console.log(rowId);
-  answers[questionId] = document.getElementById("answer" + rowCount).value;
+  answers[questionId] = encodeURIComponent(document.getElementById("answer" + rowCount).value);
   //console.log(answers);
+}
+
+function submitAnswers(userId, examId) {
+  var jsonToSend = { "studentId" : userId , "examId" : examId , "questions" : [] };
+
+  //console.log(questionIds);
+  for (var qnum = 0; qnum < questionIds.length; qnum++) {
+    if (answers[questionIds[qnum]] === undefined) {
+      var key = questionIds[qnum];
+      jsonToSend["questions"].push({ [key] : "" });
+      //console.log("BLANK ANSWER");
+      continue;
+    } else {
+      var key = questionIds[qnum];
+      jsonToSend["questions"].push({ [key] : answers[questionIds[qnum]] });
+      //console.log("ANSWER");
+      continue;
+    }
+  }
+  //console.log(jsonToSend);
+  var newJson = JSON.stringify(jsonToSend);
+  //console.log(JSON.stringify(jsonToSend));
+  //console.log(JSON.parse(newJson));
 }
