@@ -147,8 +147,21 @@ function submitAnswers(userId, examId) {
       continue;
     }
   }
-  //console.log(jsonToSend);
+  console.log(jsonToSend);
   var newJson = JSON.stringify(jsonToSend);
-  //console.log(JSON.stringify(jsonToSend));
-  //console.log(JSON.parse(newJson));
+  console.log(JSON.stringify(jsonToSend));
+  console.log(JSON.parse(newJson));
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      //var json = JSON.parse(this.responseText);
+      //var rowCount = 0;
+      console.log("Exam Submitted!");
+    }
+  }
+  xhr.open("POST", "submit_answers.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "json=" + newJson;
+  xhr.send(loginFormData);
 }
