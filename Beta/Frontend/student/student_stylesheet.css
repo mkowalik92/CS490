@@ -1,0 +1,86 @@
+#student_page_container {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+#take_exam_button {
+  display: none;
+}
+
+#available_exams {
+  border: 1px;
+  border-style: solid;
+  padding: 5px;
+  text-align: center;
+  width: 50vh;
+}
+
+#available_exams_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#available_exams_table td {
+  max-width: 40vh;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#available_exams_table tr {
+  background-color:#FFFFFF;
+}
+
+#available_exams_table th, td {
+  padding: 10px;
+}
+
+#available_exams_table td:hover {
+  background-color: #f2f2f2;
+}
+
+#available_exams_table tr:hover td {
+  background-color: #f2f2f2;
+}
+
+#graded_exams {
+  border: 1px;
+  border-style: solid;
+  padding: 5px;
+  text-align: center;
+  width: 50vh;
+}
+
+#completed_exams_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#completed_exams_table td {
+  max-width: 40vh;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#completed_exams_table tr {
+  background-color:#FFFFFF;
+}
+
+#completed_exams_table th, td {
+  padding: 10px;
+}
+
+#completed_exams_table td:hover {
+  background-color: #f2f2f2;
+}
+
+#completed_exams_table tr:hover td {
+  background-color: #f2f2f2;
+}
+
+#view_results_button {
+  display: none;
+}
