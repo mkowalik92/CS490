@@ -131,7 +131,7 @@ function saveAnswer(questionId, rowCount) {
 }
 
 function submitAnswers(userId, examId) {
-  var jsonToSend = { "studentId" : userId , "examId" : examId , "questions" : [] };
+  var jsonToSend = { "questions" : [] };
 
   //console.log(questionIds);
   for (var qnum = 0; qnum < questionIds.length; qnum++) {
@@ -147,21 +147,24 @@ function submitAnswers(userId, examId) {
       continue;
     }
   }
+  //console.log(jsonToSend);
+  console.log(examId, userId);
   console.log(jsonToSend);
   var newJson = JSON.stringify(jsonToSend);
-  console.log(JSON.stringify(jsonToSend));
-  console.log(JSON.parse(newJson));
+  console.log(newJson);
+  //console.log(JSON.stringify(jsonToSend));
+  //console.log(JSON.parse(newJson));
 
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
       //var json = JSON.parse(this.responseText);
       //var rowCount = 0;
-      console.log("Exam Submitted!");
+      //console.log("Exam Submitted!");
     }
   }
   xhr.open("POST", "submit_answers.php", true);
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-  var loginFormData = "json=" + newJson;
-  xhr.send(loginFormData);
+  var loginFormData = "examId=" + examId + "&studentId=" + userId + "&questions=" + newJson;
+  //xhr.send(loginFormData);
 }
