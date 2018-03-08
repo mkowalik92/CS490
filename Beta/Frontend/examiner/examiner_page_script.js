@@ -131,40 +131,28 @@ function saveAnswer(questionId, rowCount) {
 }
 
 function submitAnswers(userId, examId) {
-  var jsonToSend = { "questions" : [] };
-
-  //console.log(questionIds);
+  var jsonToSend = [];
   for (var qnum = 0; qnum < questionIds.length; qnum++) {
+    var obj = {};
     if (answers[questionIds[qnum]] === undefined) {
-      var key = questionIds[qnum];
-      jsonToSend["questions"].push({ [key] : "" });
-      //console.log("BLANK ANSWER");
+      obj[questionIds[qnum]] = "";
+      jsonToSend.push(obj);
       continue;
     } else {
-      var key = questionIds[qnum];
-      jsonToSend["questions"].push({ [key] : answers[questionIds[qnum]] });
-      //console.log("ANSWER");
+      obj[questionIds[qnum]] = answers[questionIds[qnum]];
+      jsonToSend.push(obj);
       continue;
     }
   }
-  //console.log(jsonToSend);
-  console.log(examId, userId);
-  console.log(jsonToSend);
-  var newJson = JSON.stringify(jsonToSend);
-  console.log(newJson);
-  //console.log(JSON.stringify(jsonToSend));
-  //console.log(JSON.parse(newJson));
 
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
-      //var json = JSON.parse(this.responseText);
-      //var rowCount = 0;
-      //console.log("Exam Submitted!");
+      // Do something when submitted
     }
   }
   xhr.open("POST", "submit_answers.php", true);
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var loginFormData = "examId=" + examId + "&studentId=" + userId + "&questions=" + newJson;
-  //xhr.send(loginFormData);
+  xhr.send(loginFormData);
 }
