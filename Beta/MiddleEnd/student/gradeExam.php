@@ -70,25 +70,19 @@ function generateCode($answer){
 function executeCode($functionName, $inputs, $output, &$notes){
   $params = "";
   foreach(explode("\n",$inputs) as $input){
-    //echo " input: " . $input ."\n decoded: " . json_decode($input) . "\n";
     $isNumber = is_numeric(json_decode($input));
     $isString = is_string(json_decode($input));
     $isArray= is_array(json_decode($input));
     $isObject = is_object(json_decode($input));
-    //echo " input type detected as: " . ($isNumber ? "Number " : "") . ($isString ? "String " : "") . ($isArray ? "Array " : "") . ($isObject ? "Object " : "") . "\n";
     $params .= ($params == "" ? "" : ", ") . ($isString ? $input : json_decode($input)); 
   }
-  //echo " params: " . $params . "\n"; 
   $output = substr($output,0,1) == '"' ? substr($output, 1, strlen($output)-2) : $output;
-  //echo " implode: ".implode(',',$params)."\n";
   $params = is_array($params) ? implode(',',$params) : $params;
   
   $command = ("python -c 'import studentCode; print studentCode." . $functionName . "(" . $params . ")'");
   $exec_output = array();
   exec($command, $exec_output, $codeFail);
-  //echo " code status: " . $codeFail."\n";
   if($codeFail != 0){
-    //echo (" Code could not compile!\n");
     $notes .= " Code could not compile!\n";
     return 0;
   }
@@ -99,11 +93,6 @@ function executeCode($functionName, $inputs, $output, &$notes){
     $printout = implode("\n",$chunk[0]);
     $returnVal = $chunk[1][0];
   }
-  
-  //echo " Code printed:\n".$printout."\n---\n";
-  //echo " Students return value: ".$returnVal."\n";
-  //echo " Expected return value: " . $output . "\n";
-  //echo " So therefore: " . ($returnVal == $output ? "CORRECT" : "INCORRECT")."\n";
   
   $notes .= ($returnVal == $output ? " PASSED" : " FAILED")."\n";
   $notes .= " Parameters: " . $params . "\n";
@@ -121,18 +110,13 @@ foreach ( json_decode($_POST['questions']) as $value) {
   $points = 0;
   $notes = "";
   $answer = urldecode($value->answer);
-  $questionId = $value->questionId;
-  //echo "Question ID: " . $questionId . "\nANS: " . $answer . "\n";
-  //$questionId = $value->questionId;
-  //echo "Question Id: ".$questionId."\n==========\n";
-  
+  $questionId = $value->questionId;  
   $testcases = getTestCases($questionId); //WHERE questionId match
   $functionName = getFunctionName($answer);
   generateCode($answer);
   $i = 0;
   foreach($testcases as $testcase){
     $input = $testcase->input;
-    //echo "\nTestcase #".++$i."\n input(s):\n".$input."\n";
     $output = $testcase->output;
     //add to note
     $notes .= "Testcase #".++$i." -";
@@ -142,17 +126,12 @@ foreach ( json_decode($_POST['questions']) as $value) {
     $points = $points + $correct;
   }
   $percent = $points / count($testcases);
-  //echo "Correctness: ".($percent*100)."%\n";
-  //submit answer
-  
+  //submit answer  
   $totalPoints = getExamQuestionPoints($examId, $questionId);
   $pointsAwarded = $totalPoints*$percent;
   $isCorrect = $percent < 0.5 ? 0 : 1;
   
   echo "submit: " . submitAnswer($questionId, $studentId, $answer, $isCorrect, $pointsAwarded, $notes) . "\n";
-  //echo "Exam ID : " . $examId . "\nQuestion ID: " . $questionId . "\nPercent: " . $percent . "\nTotal Points: " . $totalPoints . "\n";
-  //echo "Points awarded: " . $pointsAwarded . "\n";
-  //echo "\n";
 }
 echo $notes;
 ?>
