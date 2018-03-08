@@ -76,10 +76,10 @@ function selectQuestion(questionId, rowCounter, rowId) {
   document.getElementById("answer_area_container").style.display = "block";
   if(typeof answers[questionId] === 'undefined') {
     // does not exist
-    console.log("NO ANSWER");
+    //console.log("NO ANSWER");
   } else {
     // does exist
-    console.log(answers[questionId]);
+    //console.log(answers[questionId]);
     var answer = decodeURIComponent(answers[questionId]);
     document.getElementById(answerTestAreaId).value = answer;
   }
@@ -130,29 +130,26 @@ function saveAnswer(questionId, rowCount) {
   //console.log(answers);
 }
 
-function submitAnswers(userId, examId) {
-  var jsonToSend = [];
+function submitAnswers(userId, examId){
+  let studentId = userId;
+  var questions = [];
   for (var qnum = 0; qnum < questionIds.length; qnum++) {
-    var obj = {};
-    if (answers[questionIds[qnum]] === undefined) {
-      obj[questionIds[qnum]] = "";
-      jsonToSend.push(obj);
-      continue;
-    } else {
-      obj[questionIds[qnum]] = answers[questionIds[qnum]];
-      jsonToSend.push(obj);
-      continue;
-    }
+    let question = {};
+    let questionId = questionIds[qnum];
+    let answer = answers[questionIds[qnum]];
+    question.questionId = questionId;
+    question.answer = answer;
+    questions.push(question);
   }
-
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function() {
+  console.log(questions);
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      // Do something when submitted
+      let res = this.responseText;
+      console.log("PHP RESPONSE\n\n" + res);
     }
-  }
-  xhr.open("POST", "submit_answers.php", true);
-  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-  var loginFormData = "examId=" + examId + "&studentId=" + userId + "&questions=" + newJson;
-  xhr.send(loginFormData);
+  };
+  xhttp.open("POST", "submit_answers.php", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("studentId="+studentId+"&examId="+examId+"&questions="+encodeURIComponent(JSON.stringify(questions)));
 }
