@@ -8,7 +8,7 @@
   $postData = array();
   $postData['examId'] = $_POST['examId'];
   $postData['studentId'] = $_POST['studentId'];
-  $postData['questions'] = $_POST['questions'];
+  $postData['questions'] = urlencode($_POST['questions']);
 
   foreach ($postData as $key => $value) {
     $post_items[] = $key . '=' . $value;
