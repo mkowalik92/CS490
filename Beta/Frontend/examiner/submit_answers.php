@@ -1,7 +1,7 @@
 <?php
   session_start();
 
-  $url = '';
+  $url = 'https://web.njit.edu/~bn62/cs490/student/gradeExam.php';
 
   $ch = curl_init();
 

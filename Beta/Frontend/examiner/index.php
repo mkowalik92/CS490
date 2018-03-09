@@ -16,10 +16,11 @@
         setTimeout(function(){
           //console.log(questions);
           getQuestionStrings();
-          console.log(questionIds);
-          console.log(questionStrings);
-          console.log(answers);
+          //console.log(questionIds);
+          //console.log(questionStrings);
+          //console.log(answers);
         }, 1000);
+        
 
 
 
@@ -35,7 +36,7 @@
       <div id="exam_area">
         <div id="exam_question_bank_container">
           <div id="exam_questions"></div>
-          <div id="submit_exam_button"><button>Submit Exam</button></div>
+          <div id="submit_exam_button" onclick="submitAnswers(<?php echo $_SESSION['userId'] . ', ' . $_SESSION['examId'];?>)"><button>Submit Exam</button></div>
         </div>
         <div id="answer_area_container">
           <div id="question_description"></div>

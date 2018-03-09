@@ -1,0 +1,78 @@
+table {
+  border-collapse: collapse;
+}
+
+#exam_area {
+  padding-top: 10px;
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+#answer_area_container {
+  display: none;
+}
+
+#completed_exams_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#questions_table {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#questions_table td {
+  max-width: 40vh;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+#questions_table tr {
+  background-color:#FFFFFF;
+}
+
+#questions_table th, td {
+  padding: 10px;
+}
+
+#questions_table td:hover {
+  background-color: #f2f2f2;
+}
+
+#questions_table tr:hover td {
+  background-color: #f2f2f2;
+}
+
+#exam_question_bank_container {
+  border: 1px;
+  border-style: solid;
+  padding: 5px;
+  text-align: center;
+  width: 15vh;
+}
+
+#submit_exam_button {
+  padding-top: 10px;
+}
+
+#answer_area_container {
+  border: 1px;
+  border-style: solid;
+  padding: 5px;
+  width: 85vh;
+}
+
+#answer_area_container h2 {
+  text-align: center;
+}
+
+#exam_info_container h2 {
+  margin: 0px;
+}
+
+textarea {
+  tab-size: 3;
+}
