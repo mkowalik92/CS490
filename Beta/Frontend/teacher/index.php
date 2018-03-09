@@ -11,14 +11,17 @@
     <script src="teacher_page_script.js"></script>
     <script>
       window.onload = function() {
+        getGradedExams();
         getStudentIds();
         getStudentExams(function(result) { one(result); });
         getQuestBank(<?php echo $_SESSION['userId'];?>);
-        getCompletedExams(<?php echo $_SESSION['userId'];?>);
+
         //getNewestExamId();
         setTimeout(function(){
           getExams(<?php echo $_SESSION['userId'];?>);
+          getCompletedExams(<?php echo $_SESSION['userId'];?>);
         }, 2000);
+        console.log(gradedExams);
       };
 
 
@@ -143,7 +146,14 @@
         <!-- Exam Editor Popup Modal -->
         <div id="exam_editor" class="modal">
           <div class="modal-content">
-            <span class="close"><button onclick="">X</button></span>
+            <span class="close"><button onclick="closeExamEditor()">X</button></span>
+          </div>
+        </div>
+
+        <!-- Exam Grader Popup Modal -->
+        <div id="exam_grader" class="modal">
+          <div class="modal-content">
+            <span class="close"><button onclick="closeExamGrader()">X</button></span>
           </div>
         </div>
 

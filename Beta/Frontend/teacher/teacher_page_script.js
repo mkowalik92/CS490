@@ -3,9 +3,9 @@ var studentIds = [];
 var examCreatorQuestionBankJSON;
 var questionToNotShow = [];
 var newestExamId;
+var gradedExams = [];
 
 function switchTabs(choosenTab, userId) {
-  // Main navigation bar
   if (choosenTab === "quest_tab") {
     var quest = document.getElementById("quest_tab");
     quest.style.display = "block";
@@ -77,7 +77,6 @@ function selectRow(questionId, userId, rowId) {
       document.getElementById("questBankRow" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-
   document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
   var deleteButtonText = "<button onclick='deleteQuestionFromBank(" + questionId + ", " + userId + ")'>Delete</button>";
   document.getElementById("no_select_delete_button").innerHTML = deleteButtonText;
@@ -88,7 +87,6 @@ function openQuestionEditor(questionId, userId) {
   questCreator.style.display = "none";
   var questEditor = document.getElementById("quest_editor");
   questEditor.style.display = "block";
-
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -135,7 +133,7 @@ function getTestCases(questionId) {
       for (var i = 0; i < json.length; i++) {
         if (json[i].questionId == questionId) {
           testCaseCount++;
-          testCaseOutput += "<div><button class='deleteTestCaseButtons' onclick='deleteTestCase(" + json[i].testcaseId + ", " + questionId + ")'>x</button></div><div>input: <input name='" + json[i].testcaseId + "' id='oldTestInputs[]' class='test_cases' value='" + json[i].input + "'></div><div>output: <input name='" + json[i].testcaseId + "' id='oldTestOutputs[]' class='test_cases' value='" + json[i].output + "'></div>";
+          testCaseOutput += "<div><button class='deleteTestCaseButtons' onclick='deleteTestCase(" + json[i].testcaseId + ", " + questionId + ")'>x</button></div><div>input: <textarea name='" + json[i].testcaseId + "' id='oldTestInputs[]' class='test_cases' value='" + json[i].input + "'>" + json[i].input + "</textarea></div><div>output: <textarea name='" + json[i].testcaseId + "' id='oldTestOutputs[]' class='test_cases' value='" + json[i].output + "'>" + json[i].output + "</textarea></div>";
         }
       }
       document.getElementById("testCasesReplace").innerHTML = testCaseOutput;
@@ -149,7 +147,7 @@ function getTestCases(questionId) {
 
 function addNewTestCase(divName) {
   var newDiv = document.createElement('div');
-  newDiv.innerHTML = "input: <input id='newTestInputs[]'><br>output: <input id='newTestOutputs[]'><br><br>";
+  newDiv.innerHTML = "input: <textarea id='newTestInputs[]'></textarea><br>output: <textarea id='newTestOutputs[]'></textarea><br><br>";
   document.getElementById(divName).appendChild(newDiv);
 }
 
@@ -160,20 +158,16 @@ function saveQuestAndTestEditor(questionId, userId) {
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var questData = "action=UPDATE" + "&questionId=" + questionId + "&question=" + encodeURIComponent(document.getElementById('questionE').value)  + "&topic=" + encodeURIComponent(document.getElementById('topicE').value) + "&difficultyLevel=" + document.getElementById('difficultyLevelE').value;
   xhr.send(questData);
-
   // Update old test cases
   var oldTestInputsArray = document.querySelectorAll('[id^="oldTestInputs[]"]');
   var oldTestOutputsArray = document.querySelectorAll('[id^="oldTestOutputs[]"]');
-
   for (var i = 0; i < oldTestInputsArray.length; i++) {
     updateTestCase(oldTestInputsArray[i].name, oldTestInputsArray[i].value, oldTestOutputsArray[i].value);
     openQuestionEditor(questionId, userId);
   }
-
   // Create new test cases
   var newTestInputsArray = document.querySelectorAll('[id^="newTestInputs[]"]');
   var newTestOutputsArray = document.querySelectorAll('[id^="newTestOutputs[]"]');
-
   for (var i = 0; i < newTestInputsArray.length; i++) {
     createTestCase(questionId, newTestInputsArray[i].value, newTestOutputsArray[i].value);
     openQuestionEditor(questionId, userId);
@@ -208,7 +202,7 @@ function deleteTestCase(testcaseId, questionId) {
 
 function addNewTestCaseToCreator(divName) {
   var newDiv = document.createElement('div');
-  newDiv.innerHTML = "input: <input id='creatorTestCaseInputs[]'><br>output: <input id='creatorTestCaseOutputs[]'><br><br>";
+  newDiv.innerHTML = "input: <textarea id='creatorTestCaseInputs[]'></textarea><br>output: <textarea id='creatorTestCaseOutputs[]'></textarea><br><br>";
   document.getElementById(divName).appendChild(newDiv);
   document.getElementById("remove_test_case_button").style.display = "block";
   document.getElementById("create_question_button").style.display = "none";
@@ -217,7 +211,6 @@ function addNewTestCaseToCreator(divName) {
 
 function removeNewTestCaseToCreator(divName) {
   var testCases = document.getElementById(divName);
-  //console.log(testCases.lastChild.innerHTML);
   if (testCases.childNodes.length > 0) {
     testCases.removeChild(testCases.lastChild);
   }
@@ -230,37 +223,17 @@ function removeNewTestCaseToCreator(divName) {
 
 function createQuestAndTest(userId) {
   createQuestion(userId);
-
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
       var json = JSON.parse(this.responseText);
-
       var questionId = json[json.length - 1].questionId;
-
       var creatorTestCaseInputsArray = document.querySelectorAll('[id^="creatorTestCaseInputs[]"]');
       var creatorTestCaseOutputsArray = document.querySelectorAll('[id^="creatorTestCaseOutputs[]"]');
-
       for (var i = 0; i < creatorTestCaseInputsArray.length; i++) {
         createTestCase(questionId, creatorTestCaseInputsArray[i].value, creatorTestCaseOutputsArray[i].value);
       }
       clearQuestCreator(creatorTestCaseInputsArray.length);
-    }
-  }
-  xhr.open("POST", "get_quest_bank.php", true);
-  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-  var loginFormData = "action=READ";
-  xhr.send(loginFormData);
-}
-
-function getLastQuestBankId() {
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var json = JSON.parse(this.responseText);
-      //console.log(json[json.length - 1].questionId);
-      var questionId = json[json.length - 1].questionId;
-      return(questionId);
     }
   }
   xhr.open("POST", "get_quest_bank.php", true);
@@ -319,11 +292,6 @@ function getExams(userId) {
 
 function getExamQuestions(userId) {
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function() {
-    if (this.readyState == 4 && this.status == 200) {
-      //console.log(this.responseText);
-    }
-  }
   xhr.open("POST", "get_exam_questions.php", true);
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var loginFormData = "action=READ";
@@ -357,7 +325,6 @@ function selectExamBankRow(examId, userId, rowId, published) {
     }
   }
   document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
-  //console.log(published);
   if (published == true) {
     document.getElementById("exam_publish_button").style.display = "none";
 
@@ -366,13 +333,9 @@ function selectExamBankRow(examId, userId, rowId, published) {
     document.getElementById("exam_publish_button").style.display = "block";
     var publishButtonText = "<button onclick='publishExam(" + examId + ", " + userId + ")'>Publish</button>";
     document.getElementById("exam_publish_button").innerHTML = publishButtonText;
-    //console.log(published);
   }
-
-  //var createButtonText = "<button>Create</button>";
-  //document.getElementById("exam_create_button").innerHTML = createButtonText;
-  //document.getElementById("exam_edit_button").style.display = "block";
-  var editButtonText = "<button>Edit " + examId + "</button>";
+  document.getElementById("exam_edit_button").style.display = "block";
+  var editButtonText = "<button onclick='openExamEditor(" + examId + ")'>Edit " + examId + "</button>";
   document.getElementById("exam_edit_button").innerHTML = editButtonText;
   document.getElementById("exam_delete_button").style.display = "block";
   var deleteButtonText = "<button onclick='deleteExamButton(" + examId + ", " + userId + ")'>Delete</button>";
@@ -385,7 +348,6 @@ function getStudentIds() {
     if (this.readyState == 4 && this.status == 200) {
       var json = JSON.parse(this.responseText);
       for (var i = 0; i < json.length; i++) {
-        //console.log(json[i].userId, json[i].isInstructor);
         if (json[i].isInstructor == 0) {
           studentIds.push(json[i].userId);
         }
@@ -425,9 +387,9 @@ function getCompletedExams(userId) {
       var textToTable = "<table id='completed_exam_bank_table' border='1'><tr><th>Exam ID</th><th>Student ID</th></tr>";
       var rowCount = 0;
       for (var i = 0; i < json.length; i++) {
-        if (json[i].examSubmitted == 1) {
+        if ((json[i].examSubmitted == 1) && (gradedExams.indexOf(json[i].examId) == -1)) {
           rowCount++;
-          textToTable += "<tr id='completedExamBankRow" + rowCount + "' onclick='selectCompletedExamBankRow(" + json[i].examId + ", " + userId + ", this.id)'><td>" + json[i].examId + "</td><td>" + json[i].studentId + "</td></tr>";
+          textToTable += "<tr id='completedExamBankRow" + rowCount + "' onclick='selectCompletedExamBankRow(" + json[i].examId + ", " + userId + ", this.id, " + json[i].studentId + ")'><td>" + json[i].examId + "</td><td>" + json[i].studentId + "</td></tr>";
         }
       }
       textToTable += "</table>";
@@ -440,7 +402,7 @@ function getCompletedExams(userId) {
   xhr.send(loginFormData);
 }
 
-function selectCompletedExamBankRow(examId, userId, rowId) {
+function selectCompletedExamBankRow(examId, userId, rowId, studentId) {
   var table = document.getElementById("completed_exam_bank_table");
   for (var rowCount = 1; rowCount < table.rows.length; rowCount++) {
     if (("completedExamBankRow" + rowCount) != rowId) {
@@ -449,7 +411,8 @@ function selectCompletedExamBankRow(examId, userId, rowId) {
   }
   document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
 
-  var gradeButtonText = "<button>Grade " + examId + "</button>";
+  //var gradeButtonText = "<button onclick='openExamGrader(" + examId + ", " + studentId + ")'>Release Grade " + examId + "</button>";
+  var gradeButtonText = "<button onclick='releaseGrade(" + examId + ", " + userId + ")'>Release Grade " + examId + "</button>";
   document.getElementById("grade_button").innerHTML = gradeButtonText;
   document.getElementById("grade_button").style.display = "block";
 }
@@ -471,7 +434,6 @@ function getExamCreatorQuestionBank(userId) {
     if (this.readyState == 4 && this.status == 200) {
       var json = JSON.parse(this.responseText);
       examCreatorQuestionBankJSON = json;
-      //console.log(json);
       var textToTable = "<table id='exam_creator_question_table' border='1'><tr><th>ID</th><th>Question</th><th>Difficulty</th></tr>";
       var rowCount = 0;
       var jsonRowCount = 0;
@@ -513,12 +475,9 @@ function selectExamCreatorQuestionRow(questionId, userId, rowId, rowCounter, row
   var addQuestionButtonText = "<button onclick='addQuestionToCreator(" + questionId + ", " + rowCounter + ", " + rowCountToDelete + ", " + userId + ")'>Add Question " + questionId + "</button>";
   document.getElementById("add_question_button").innerHTML = addQuestionButtonText;
   document.getElementById("add_question_button").style.display = "block";
-  //console.log(rowCountToDelete);
 }
 
 function addQuestionToCreator(questionId, rowCount, rowCountToDelete, userId) {
-  //console.log(questionId, rowCount);
-  //console.log(examCreatorQuestionBankJSON);
   questionToNotShow.push(questionId);
   var table = document.getElementById("current_exam_questions_table");
   var row = table.insertRow(-1);
@@ -533,14 +492,11 @@ function addQuestionToCreator(questionId, rowCount, rowCountToDelete, userId) {
   cell2.innerHTML = examCreatorQuestionBankJSON[rowCount - 1].difficultyLevel;
   cell3.innerHTML = "<input placeholder='Points' value='0' id='exam_creator_new_question_row" + table.rows.length + "'>";
   var tableToDeleteFrom = document.getElementById("exam_creator_question_table");
-  //tableToDeleteFrom.deleteRow(rowCountToDelete);
-  //console.log(questionToNotShow);
   document.getElementById("add_question_button").style.display = "none";
   getExamCreatorQuestionBank(userId);
 }
 
 function selectCurrentExamQuestionTableRow(rowToDelete, questionId, rowId, userId) {
-  //console.log(rowToDelete);
   var table = document.getElementById("current_exam_questions_table");
   for (var rowCount = 1; rowCount < table.rows.length; rowCount++) {
     if (("current_exam_question_table_row" + rowCount) != rowId) {
@@ -552,7 +508,6 @@ function selectCurrentExamQuestionTableRow(rowToDelete, questionId, rowId, userI
   var removeQuestionButtonText = "<button onclick='deleteFromCurrentExamQuestionsTable(" + rowToDelete + ", " + questionId + ", " + userId + ")'>Remove Question " + questionId + "</button>";
   document.getElementById("remove_question_button").innerHTML = removeQuestionButtonText;
   document.getElementById("remove_question_button").style.display = "block";
-  //console.log(rowCountToDelete);
 }
 
 function deleteFromCurrentExamQuestionsTable(rowToDelete, questionId, userId) {
@@ -571,19 +526,14 @@ function removeFromQuestionToNotShow(questionId) {
 function createExam(userId) {
   var table = document.getElementById("current_exam_questions_table");
   postExam(document.getElementById("title").value, document.getElementById("description").value);
-  //console.log(document.getElementById("title").value);
-  //console.log(document.getElementById("description").value);
   getNewestExamId();
   setTimeout(function(){
     for (var i = 2; i <= table.rows.length; i++) {
-      //console.log(table.rows[i - 1].cells[0].innerHTML, document.getElementById("exam_creator_new_question_row" + i).value);
       createExamQuestion(table.rows[i - 1].cells[0].innerHTML, newestExamId, document.getElementById("exam_creator_new_question_row" + i).value);
     }
   }, 2000);
-
   closeExamCreator();
   getExams(userId);
-  //oldTestInputsArray
 }
 
 function getNewestExamId() {
@@ -592,7 +542,6 @@ function getNewestExamId() {
     if (this.readyState == 4 && this.status == 200) {
       var json = JSON.parse(this.responseText);
       newestExamId = json[json.length - 1].examId;
-      //console.log(newestExamId);
     }
   }
   xhr.open("POST", "get_exams.php", true);
@@ -619,22 +568,15 @@ function createExamQuestion(questionId, examId, points) {
 
 function deleteExamButton(examId, userId) {
   deleteExam(examId);
-  //console.log(examId);
   deleteExamQuestions(examId);
   deletePublishedExams(examId);
   setTimeout(function(){
     getExams(userId);
   }, 1000);
-  //document.getElementById("exam_delete_button").style.display = "none";
 }
 
 function deleteExam(examId) {
   var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange=function() {
-    if (this.readyState == 4 && this.status == 200) {
-      //console.log(this.responseText);
-    }
-  }
   xhr.open("POST", "delete_exam.php", true);
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var oldTestData = "action=DELETE" + "&examId=" + examId;
@@ -691,4 +633,57 @@ function deleteStudentExamEntry(studentExamId) {
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var oldTestData = "action=DELETE" + "&studentExamId=" + studentExamId;
   xhr.send(oldTestData);
+}
+
+function closeExamGrader() {
+  document.getElementById("exam_grader").style.display = "none";
+  document.getElementById("exam_tab_container").style.display = "flex";
+}
+
+function openExamGrader(examId, studentId) {
+  document.getElementById("exam_tab_container").style.display = "none";
+  document.getElementById("exam_grader").style.display = "block";
+  console.log(examId);
+  console.log(studentId);
+}
+
+function closeExamEditor() {
+  document.getElementById("exam_editor").style.display = "none";
+  document.getElementById("exam_tab_container").style.display = "flex";
+}
+
+function openExamEditor(examId) {
+  document.getElementById("exam_tab_container").style.display = "none";
+  document.getElementById("exam_editor").style.display = "block";
+  console.log(examId);
+}
+
+function releaseGrade(examId, userId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "release_grade.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var oldTestData = "action=UPDATE" + "&examId=" + examId;
+  xhr.send(oldTestData);
+  getGradedExams();
+  setTimeout(function(){
+    getCompletedExams(userId);
+  }, 1000);
+}
+
+function getGradedExams() {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      for (var i = 0; i < json.length; i++) {
+        if (json[i].gradeVisible == 1) {
+          gradedExams.push(json[i].examId);
+        }
+      }
+    }
+  }
+  xhr.open("POST", "get_exams.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "action=READ";
+  xhr.send(loginFormData);
 }
