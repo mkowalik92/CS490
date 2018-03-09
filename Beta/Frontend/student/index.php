@@ -10,6 +10,9 @@
     <script src="https://web.njit.edu/~mk343/cs490/logout.js"></script>
     <script src="student_page_script.js"></script>
     <script>
+      //function getQuestionIds(examId) {
+      //  console.log(examId);
+      //}
       window.onload = function() {
         getExamTitles();
         getGradedExams();
@@ -19,6 +22,7 @@
         }, 1000);
       };
     </script>
+    <script src="student_page_script.js"></script>
   </head>
 
   <body>
@@ -40,6 +44,13 @@
           <div id="completed_exams_container"></div>
           <div><button onclick="displayGradedExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
           <div id="view_results_button"><button onclick="">View Results</button></div>
+        </div>
+      </div>
+
+      <div id="exam_results_modal" class="modal">
+        <div class="modal-content">
+          <span class="close"><button onclick="closeExamResults()">X</button></span>
+          <div id="results"></div>
         </div>
       </div>
 

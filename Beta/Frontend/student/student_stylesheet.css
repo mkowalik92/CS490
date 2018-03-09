@@ -84,3 +84,54 @@
 #view_results_button {
   display: none;
 }
+
+.modal {
+    display: none; /* Hidden by default */
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow-y: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    text-align: center;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.answers {
+  text-align: left;
+  border: 1px;
+  border-style: solid;
+}
+
+#results_container {
+  padding-top: 40px;
+  white-space: pre;
+}
+
+.notes {
+  border-top: 1px;
+  border-style: solid;
+  border-bottom: 1px;
+}
