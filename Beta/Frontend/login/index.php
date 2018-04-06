@@ -6,7 +6,7 @@
 
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--link rel="stylesheet" type="text/css" href=""-->
+    <link rel="stylesheet" type="text/css" href="login_stylesheet.css">
     <script src="login_page_script.js"></script>
   </head>
 
@@ -14,17 +14,18 @@
     <div>
 
       <!-- Login Form -->
-      <div>
-        <form class="login_form">
-          <!-- Username Input -->
-          <div><input placeholder="username" id="username"></div>
-          <!-- Password Input -->
-          <div><input type="password" placeholder="password" id="password"></div>
-          <!-- Login Button -->
-          <div><input type="button" value="Login" onclick="login()"></div>
-          <!-- Wrong Password/Username -->
-          <div id="wrongpassword"></div>
-        </form>
+      <div id="login_form_container">
+        <!--form class="login_form"-->
+        <img src="logo.png" alt="Logo Placeholder">
+        <!-- Username Input -->
+        <input class="login_input" placeholder="username" id="username">
+        <!-- Password Input -->
+        <input class="login_input" type="password" placeholder="password" id="password">
+        <!-- Login Button -->
+        <input type="button" value="Login" onclick="login()">
+        <!-- Wrong Password/Username -->
+        <div id="wrongpassword"></div>
+        <!--/form-->
       </div>
 
     </div>

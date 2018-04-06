@@ -1,0 +1,68 @@
+body {
+  background-color: #DEFAEE;
+}
+
+img {
+  max-width: 300px;
+  max-height: 300px;
+}
+
+#login_form_container {
+  display: grid;
+  grid-template-columns: 100%;
+  justify-content: center;
+  justify-items: center;
+  text-align: center;
+  grid-row-gap: 10px;
+}
+
+#username {
+  background-image: url('user.png');
+}
+
+#password {
+  background-image: url('pass.png');
+}
+
+.login_input {
+  background-position: 10px 10px;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  font-size: large;
+  padding: 4px;
+  padding-left: 40px;
+  height: 30px;
+  width: 28%;
+  border-radius: 4px;
+  border: 2px solid #555;
+  color: black;
+}
+
+.login_input:focus {
+  color: black;
+  background-color: #C4D0CB;
+}
+
+.login_input:focus::placeholder {
+  color: black;
+}
+
+input[type=button] {
+  font-family: Courier;
+  font-weight: bold;
+  background-color: #C8D3CE;
+  font-size: xx-large;
+  margin-top: 10px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  width: 10%;
+  min-width: 120px;
+  height: 100%;
+  border-radius: 4px;
+  border: 1px solid black;
+}
+
+input[type=button]:hover {
+  cursor: pointer;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
