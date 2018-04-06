@@ -5,6 +5,15 @@ var questionToNotShow = [];
 var newestExamId;
 var gradedExams = [];
 
+// All global below this are for only the exam Gradervar questionIds = [];
+var questionIds = []; // Array containing all question Ids in the exam
+var questionStrings = {}; // List of question strings by question id
+var pointsPerQuestion = []; // Amount of points possible for answer question right
+var maxPoints = 0; // Max possible points one can achieve
+
+var pointsAwarded = 0; // Total points awarded out of max
+var pointsAwardedPerQuestion = [];
+
 function switchTabs(choosenTab, userId) {
   if (choosenTab === "quest_tab") {
     var quest = document.getElementById("quest_tab");
@@ -77,7 +86,7 @@ function selectRow(questionId, userId, rowId) {
       document.getElementById("questBankRow" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
   var deleteButtonText = "<button onclick='deleteQuestionFromBank(" + questionId + ", " + userId + ")'>Delete</button>";
   document.getElementById("no_select_delete_button").innerHTML = deleteButtonText;
 }
@@ -324,7 +333,7 @@ function selectExamBankRow(examId, userId, rowId, published) {
       document.getElementById("examBankRow" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
   if (published == true) {
     document.getElementById("exam_publish_button").style.display = "none";
 
@@ -380,6 +389,7 @@ function publishExam(examId, userId) {
 
 function getCompletedExams(userId) {
   document.getElementById("grade_button").style.display = "none";
+  document.getElementById("preview_grade_button_container").style.display = "none";
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange=function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -409,12 +419,15 @@ function selectCompletedExamBankRow(examId, userId, rowId, studentId) {
       document.getElementById("completedExamBankRow" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
   //var gradeButtonText = "<button onclick='openExamGrader(" + examId + ", " + studentId + ")'>Release Grade " + examId + "</button>";
+  var previewGradeButtonText = "<button onclick='openExamGrader(" + examId + ", " + studentId + ")'>Preview & Edit Grade " + examId + "</button>";
   var gradeButtonText = "<button onclick='releaseGrade(" + examId + ", " + userId + ")'>Release Grade " + examId + "</button>";
   document.getElementById("grade_button").innerHTML = gradeButtonText;
+  document.getElementById("preview_grade_button_container").innerHTML = previewGradeButtonText;
   document.getElementById("grade_button").style.display = "block";
+  document.getElementById("preview_grade_button_container").style.display = "block";
 }
 
 function closeExamCreator() {
@@ -470,7 +483,7 @@ function selectExamCreatorQuestionRow(questionId, userId, rowId, rowCounter, row
       document.getElementById("exam_creator_question_table_row" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
   var addQuestionButtonText = "<button onclick='addQuestionToCreator(" + questionId + ", " + rowCounter + ", " + rowCountToDelete + ", " + userId + ")'>Add Question " + questionId + "</button>";
   document.getElementById("add_question_button").innerHTML = addQuestionButtonText;
@@ -503,7 +516,7 @@ function selectCurrentExamQuestionTableRow(rowToDelete, questionId, rowId, userI
       document.getElementById("current_exam_question_table_row" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
   var removeQuestionButtonText = "<button onclick='deleteFromCurrentExamQuestionsTable(" + rowToDelete + ", " + questionId + ", " + userId + ")'>Remove Question " + questionId + "</button>";
   document.getElementById("remove_question_button").innerHTML = removeQuestionButtonText;
@@ -643,8 +656,9 @@ function closeExamGrader() {
 function openExamGrader(examId, studentId) {
   document.getElementById("exam_tab_container").style.display = "none";
   document.getElementById("exam_grader").style.display = "block";
-  console.log(examId);
-  console.log(studentId);
+  openExamResults(studentId, examId);
+  //console.log(examId);
+  //console.log(studentId);
 }
 
 function closeExamEditor() {
@@ -655,7 +669,7 @@ function closeExamEditor() {
 function openExamEditor(examId) {
   document.getElementById("exam_tab_container").style.display = "none";
   document.getElementById("exam_editor").style.display = "block";
-  console.log(examId);
+  //console.log(examId);
 }
 
 function releaseGrade(examId, userId) {
@@ -686,4 +700,161 @@ function getGradedExams() {
   xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   var loginFormData = "action=READ";
   xhr.send(loginFormData);
+}
+
+// Functions for previewing and editting graded but non-released exams
+function openExamResults(userId, examId) {
+  //document.getElementById("student_page_container").style.display = "none";
+  //document.getElementById("exam_results_modal").style.display = "block";
+  getQuestId(examId);
+  setTimeout(function(){
+    getQuestStrings();
+
+  }, 1000);
+
+  //console.log(obj);
+  //console.log(questionIds);
+  //console.log(questionStrings);
+  //console.log(pointsPerQuestion);
+  //console.log(maxPoints);
+  setTimeout(function(){
+    populateResults(userId, examId);
+    //console.log(questionIds);
+    //console.log(questionStrings);
+    //console.log(pointsPerQuestion);
+    //console.log(maxPoints);
+  }, 3000);
+
+  //console.log(userId, examId);
+}
+
+function populateResults(userId, examId) {
+  //console.log(examId);
+  //console.log(questionIds);
+  //console.log(questionStrings);
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      //console.log(json);
+      var textToDiv = "<div id='results_container'>";
+      var answerCount = 0;
+      for (var i = 0; i < json.length; i++) {
+        //console.log(json[i]);
+        if (json[i].studentId == userId && questionIds.indexOf(json[i].questionId) > -1) {
+          answerCount++;
+          //console.log(questionStrings[json[i].questionId.toString()]);
+          var question = questionStrings[json[i].questionId.toString()];
+          //console.log(json[i]);
+          var correct = "WRONG";
+          if (json[i].isCorrect == 1) {
+            correct = "CORRECT";
+          }
+          pointsAwarded += parseInt(json[i].pointsAwarded);
+          textToDiv += "<div class='answers' id='answer" + answerCount + "'><div>" + json[i].questionId + " " + correct + " Points: <input size='1' id='new_points_awarded[]' placeholder='" + json[i].pointsAwarded + "' value='" + json[i].pointsAwarded + "'>/" + pointsPerQuestion[json[i].questionId] + "</div><div><p>" + question + "</p></div><div>Your answer:</div><div class='answers'>" + json[i].answer + "</div><div class='notes'>" + json[i].notes + "</div></div>";
+        }
+      }
+      textToDiv += "<div><button onclick='savePointChanges(" + userId + ", " + examId + ")'>Save Changes</button></div><div>Exam Score: " + pointsAwarded + "/" + maxPoints + "</div>";
+      document.getElementById("results").innerHTML = textToDiv;
+      //questionIds = [];
+      //questionStrings = {};
+      pointsPerQuestion = [];
+      maxPoints = 0;
+      pointsAwarded = 0;
+    }
+  }
+  xhr.open("POST", "https://web.njit.edu/~mk343/cs490/examiner/get_exam_answers.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "action=READ";
+  xhr.send(loginFormData);
+}
+
+function getQuestId(examId) {
+  var examIdent = examId;
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      for (var i = 0; i < json.length; i++) {
+        if (json[i].examId == examIdent) {
+          //console.log(json[i].questionId, json[i].examId, json[i].points);
+          maxPoints += parseInt(json[i].points);
+          questionIds.push(json[i].questionId);
+          pointsPerQuestion[json[i].questionId] = json[i].points;
+        }
+      }
+      //console.log("Max Points: " + maxPoints);
+      //console.log(questionIds);
+    }
+  }
+  xhr.open("POST", "https://web.njit.edu/~mk343/cs490/teacher/get_exam_questions.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "action=READ";
+  xhr.send(loginFormData);
+}
+
+function getQuestStrings() {
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      for (var i = 0; i < json.length; i++) {
+        if (questionIds.indexOf(json[i].questionId.toString()) > -1) {
+          questionStrings[json[i].questionId.toString()] = json[i].question;
+          //console.log(questionStrings[json[i].questionId.toString()]);
+          //var obj = {};
+          //obj[json[i].questionId.toString()] = json[i].question;
+          //console.log(obj);
+          //questionStrings.push(obj);
+          //console.log(json[i].question);
+        }
+      }
+
+    }
+  }
+  xhr.open("POST", "https://web.njit.edu/~mk343/cs490/teacher/get_quest_bank.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "action=READ";
+  xhr.send(loginFormData);
+}
+
+function savePointChanges(userId, examId) {
+  console.log(userId, examId);
+  var newPointValuesArray = document.querySelectorAll('[id^="new_points_awarded[]"]');
+  //console.log(newPointValuesArray);
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange=function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var json = JSON.parse(this.responseText);
+      var answerCount = 0;
+      //console.log(json[0].answerId);
+      //console.log(newPointValuesArray[answerCount].value);
+      for (var i = 0; i < json.length; i++) {
+        //console.log(json[i]);
+        console.log(json[i]);
+        if (json[i].studentId == userId && questionIds.indexOf(json[i].questionId) > -1) {
+          console.log("ahhhhhhhhhhhh");
+          console.log(json[i].answerId);
+          console.log(newPointValuesArray[answerCount].value);
+          updateAnswer(json[i].answerId, newPointValuesArray[answerCount].value);
+          answerCount++;
+        }
+      }
+
+    }
+  }
+  xhr.open("POST", "https://web.njit.edu/~mk343/cs490/examiner/get_exam_answers.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var loginFormData = "action=READ";
+  xhr.send(loginFormData);
+}
+
+function updateAnswer(answerId, newPointValue) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://web.njit.edu/~mk343/cs490/teacher/update_exam_answer.php", true);
+  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  var formData = "action=UPDATE&answerId=" + answerId + "&newPointValue=" + newPointValue;
+  xhr.send(formData);
+  console.log("updateAnswer ran");
 }

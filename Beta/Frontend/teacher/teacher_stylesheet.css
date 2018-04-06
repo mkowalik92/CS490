@@ -1,3 +1,76 @@
+body {
+  background-color: #DEFAEE;
+  font-family: Courier;
+  font-weight: bold;
+}
+
+textarea {
+  padding: 4px;
+  border-radius: 4px;
+  border: 2px solid #555;
+  color: black;
+}
+
+textarea:focus {
+  color: black;
+  background-color: #C4D0CB;
+}
+
+textarea::placeholder {
+  color: black;
+}
+
+input {
+  padding: 4px;
+  border-radius: 4px;
+  border: 2px solid #555;
+  color: black;
+}
+
+input:focus {
+  color: black;
+  background-color: #C4D0CB;
+}
+
+input::placeholder {
+  color: black;
+}
+
+button {
+  background-color: #C8D3CE;
+  border-radius: 4px;
+  border: 1px solid black;
+  font-family: Courier;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #EEF0EF;
+  cursor: pointer;
+}
+
+.top_desc_inputs {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: auto auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  font-family: Courier;
+  font-weight: bold;
+}
+
+.header img {
+  width: 80.475px;
+  height: 80.475px;
+}
+
 .navbar {
   display: flex;
   flex-direction: row:column;
@@ -10,19 +83,22 @@
 
 #exam_tab {
   display: none;
+  margin-top: 10px;
 }
 
 #exam_tab_container {
   display: flex;
   flex-direction: row;
+  justify-content: space-evenly;
 }
 
 #exam_bank {
-  border: 1px;
-  border-style: solid;
   padding: 5px;
   text-align: center;
   width: 50vh;
+  box-shadow: 5px 10px #888888;
+  border-radius: 4px;
+  border: 2px solid #555;
 }
 
 #exam_bank_table {
@@ -62,11 +138,12 @@
 }
 
 #completed_exam_bank {
-  border: 1px;
-  border-style: solid;
   padding: 5px;
   text-align: center;
   width: 50vh;
+  box-shadow: 5px 10px #888888;
+  border-radius: 4px;
+  border: 2px solid #555;
 }
 
 #completed_exam_bank_table {
@@ -101,8 +178,8 @@
 #completed_exam_bank_buttons {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: auto auto;
-  grid-column-gap: 5px;
+  grid-template-columns: auto;
+  grid-row-gap: 3px;
 }
 
 #exam_temp_buttons {
@@ -125,9 +202,10 @@
 #quest_bank {
   display: block;
   padding: 5px;
-  border: 2px;
-  border-style: solid;
   margin-top: 10px;
+  box-shadow: 5px 10px #888888;
+  border-radius: 4px;
+  border: 2px solid #555;
 }
 
 .quest_tab_container {
@@ -141,13 +219,16 @@
   max-width: 50vh;
   padding: 20px;
   margin: 10px;
-  border: 2px;
-  border-style: solid;
+  box-shadow: 5px 10px #888888;
+  border-radius: 4px;
+  border: 2px solid #555;
 }
 
 .editButtons {
   max-width: 40vh;
   margin: 0 auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
   display: block;
 }
 
@@ -163,8 +244,9 @@
   max-width: 50vh;
   padding: 20px;
   margin: 10px;
-  border: 2px;
-  border-style: solid;
+  box-shadow: 5px 10px #888888;
+  border-radius: 4px;
+  border: 2px solid #555;
 }
 
 #quest_bank_table tr:hover td {
@@ -199,7 +281,18 @@
 }
 
 table {
-  border-collapse: collapse;
+  border-radius: 4px;
+  border: 2px solid #555;
+  border-spacing: 0px;
+}
+
+th {
+  background-color: #C8D3CE;
+}
+
+h2 {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .test_cases input {
@@ -226,6 +319,7 @@ table {
   display: none;
   max-width: 40vh;
   margin: 0 auto;
+  margin-top: 5px;
 }
 
 #testCasesReplace {
@@ -235,12 +329,12 @@ table {
 #quest_bank_header {
   text-align: center;
 }
-#quest_bank_header h2 {
-  margin-top: 3px;
-  margin-bottom: 3px;
-}
 
 #grade_button {
+  display: none;
+}
+
+#preview_grade_button_container {
   display: none;
 }
 
@@ -258,9 +352,12 @@ table {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
+    /*border: 1px solid #888;*/
     width: 80%;
     text-align: center;
+    box-shadow: 5px 10px #888888;
+    border-radius: 4px;
+    border: 2px solid #555;
 }
 
 /* The Close Button */
@@ -343,4 +440,40 @@ table {
 #current_exam_questions_creator {
   padding-bottom: 10px;
   padding-top: 10px;
+}
+
+.modal-content button {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.modal-content input {
+  margin-bottom: 5px;
+}
+
+.answers {
+  text-align: left;
+  padding: 5px;
+  border-radius: 4px;
+  border: 2px solid #555;
+  font-family: Consolas;
+  font-weight: normal;
+  margin-bottom: 20px;
+}
+
+.answers:nth-child(odd) {
+    border: 2px solid #333;
+}
+
+#results_container {
+  padding-top: 40px;
+  white-space: pre;
+}
+
+.notes {
+  border-top: 1px;
+  border-style: solid;
+  border-bottom: 1px;
+  font-family: Consolas;
+  font-weight: normal;
 }

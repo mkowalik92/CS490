@@ -21,7 +21,7 @@
           getExams(<?php echo $_SESSION['userId'];?>);
           getCompletedExams(<?php echo $_SESSION['userId'];?>);
         }, 2000);
-        console.log(gradedExams);
+        //console.log(gradedExams);
       };
 
 
@@ -32,7 +32,11 @@
     <div>
 
       <!-- Header -->
-      <div><h1>Teacher Home Page</h1></div>
+      <div class="header">
+        <img src="logo.png" alt="Logo Placeholder">
+        <h1><?php echo $_SESSION['username'];?>'s Home Page</h1>
+
+      </div>
 
       <!-- Teacher Navbar -->
       <div class="navbar">
@@ -60,8 +64,8 @@
           <div id="quest_creator">
             <h2>Question Creator</h2>
             <div><textarea rows="10" cols="30" placeholder="Question" id="questionC"></textarea></div>
-            <div><input placeholder="Topic" id="topicC"></div>
-            <div><input placeholder="Difficulty" id="difficultyLevelC"></div>
+            <div class="top_desc_inputs"><input placeholder="Topic" id="topicC"></div>
+            <div class="top_desc_inputs"><input placeholder="Difficulty" id="difficultyLevelC"></div>
             <button id="create_question_button" onclick="createQuestion(<?php echo $_SESSION['userId'];?>)">Create Question</button>
             <div>
               Test Cases
@@ -75,8 +79,8 @@
           <div id="quest_editor">
             <h2>Question Editor</h2>
             <div><textarea rows="10" cols="30" placeholder="Question" id="questionE" value=""></textarea></div>
-            <div><input placeholder="Topic" id="topicE" value=""></div>
-            <div><input placeholder="Difficulty" id="difficultyLevelE" value=""></div>
+            <div class="top_desc_inputs"><input placeholder="Topic" id="topicE" value=""></div>
+            <div class="top_desc_inputs"><input placeholder="Difficulty" id="difficultyLevelE" value=""></div>
             <div>
               Test Cases
               <div id="testCasesReplace"></div>
@@ -113,6 +117,7 @@
             <div id="completed_exam_bank_container"></div>
             <div id="completed_exam_bank_buttons">
               <div><button onclick="getCompletedExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
+              <div id="preview_grade_button_container"><button onclick="">Grade</button></div>
               <div id="grade_button"><button onclick="">Grade</button></div>
             </div>
 
@@ -154,6 +159,7 @@
         <div id="exam_grader" class="modal">
           <div class="modal-content">
             <span class="close"><button onclick="closeExamGrader()">X</button></span>
+            <div id="results"></div>
           </div>
         </div>
 
