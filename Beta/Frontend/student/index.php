@@ -28,21 +28,26 @@
   <body>
     <div>
 
-      <h1>Student Page</h1>
+      <!-- Header -->
+      <div class="header">
+        <img src="logo.png" alt="Logo Placeholder">
+        <h1><?php echo $_SESSION['username'];?>'s Home Page</h1>
 
-      <div><button onclick="logout()">Logout</button></div>
+      </div>
+
+      <div class="logout_button"><button onclick="logout()">Logout</button></div>
 
       <div id="student_page_container">
         <div id="available_exams">
           <div><h2>Available Exams</h2></div>
           <div id="available_exams_container"></div>
-          <div><button onclick="getAvailableExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
+          <div class="refresh_exams"><button onclick="getAvailableExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
           <div id="take_exam_button"><button onclick="">Take Exam</button></div>
         </div>
         <div id="graded_exams">
           <div><h2>Graded Exams</h2></div>
           <div id="completed_exams_container"></div>
-          <div><button onclick="displayGradedExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
+          <div class="refresh_exams"><button onclick="displayGradedExams(<?php echo $_SESSION['userId'];?>)">Refresh</button></div>
           <div id="view_results_button"><button onclick="">View Results</button></div>
         </div>
       </div>

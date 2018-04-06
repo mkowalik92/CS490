@@ -104,9 +104,9 @@ function selectCompletedExamsRow(examId, userId, rowId) {
       document.getElementById("completed_exams_row" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
-  var viewResultsButtonText = "<button onclick='openExamResults(" + userId + ", " + examId + ")'>View Results " + examId + "</button>";
+  var viewResultsButtonText = "<button onclick='openExamResults(" + userId + ", " + examId + ")'>View Results</button>";
   document.getElementById("view_results_button").innerHTML = viewResultsButtonText;
   document.getElementById("view_results_button").style.display = "block";
 }
@@ -118,9 +118,9 @@ function selectAvailableExamsRow(examId, userId, rowId) {
       document.getElementById("available_exams_row" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
-  var takeExamButtonText = "<button onclick='takeExam(" + examId + ")'>Take Exam " + examId + "</button>";
+  var takeExamButtonText = "<button onclick='takeExam(" + examId + ")'>Take Exam</button>";
   document.getElementById("take_exam_button").innerHTML = takeExamButtonText;
   document.getElementById("take_exam_button").style.display = "block";
 }
@@ -229,10 +229,10 @@ function populateResults(userId, examId) {
             correct = "CORRECT";
           }
           pointsAwarded += parseInt(json[i].pointsAwarded);
-          textToDiv += "<div class='answers' id='answer" + answerCount + "'><div>" + json[i].questionId + " " + correct + "</div><div><p>" + question + "</p></div><div>Your answer:</div><div>" + json[i].answer + "</div><div class='notes'>" + json[i].notes + "</div></div>";
+          textToDiv += "<div class='answers' id='answer" + answerCount + "'><div>" + json[i].questionId + " " + correct + "</div><div class='question'><p>" + question + "</p></div><div>Your answer:</div><div class='answers'>" + json[i].answer + "</div><div class='notes'>" + json[i].notes + "</div></div>";
         }
       }
-      textToDiv += "<div>Exam Score: " + pointsAwarded + "/" + maxPoints + "<div></div>";
+      textToDiv += "<div>Exam Score: " + pointsAwarded + "/" + maxPoints + "</div>";
       document.getElementById("results").innerHTML = textToDiv;
       questionIds = [];
       questionStrings = {};
