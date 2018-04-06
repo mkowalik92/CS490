@@ -1,5 +1,6 @@
 var questionIds = [];
 var questionStrings = [];
+var questionPointValues = [];
 var answers = [];
 var studentExamId = 0;
 
@@ -60,9 +61,9 @@ function selectQuestion(questionId, rowCounter, rowId) {
       document.getElementById("exam_question_row" + rowCount).style.backgroundColor = "#FFFFFF";
     }
   }
-  document.getElementById(rowId).style.backgroundColor = "#D0D1DB";
+  document.getElementById(rowId).style.backgroundColor = "#9CB4A9";
 
-  var questionText = "<h2>Question " + rowCounter + "</h2><br><br>" + questionStrings[questionId];
+  var questionText = "<h2>Question " + rowCounter + " : Points = " + questionPointValues[questionId] + "</h2><br><br>" + questionStrings[questionId];
   document.getElementById("question_description").innerHTML = questionText;
 
   var saveAnswerButtonText = "<button onclick='saveAnswer(" + questionId + ", " + rowCounter + ")'>Save Answer</button>";
@@ -95,6 +96,7 @@ function getQuestions(examId) {
       for (var i = 0; i < json.length; i++) {
         if (json[i].examId == examId) {
           questionIds.push(json[i].questionId);
+          questionPointValues[json[i].questionId] = json[i].points;
           continue;
         }
       }

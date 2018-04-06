@@ -20,7 +20,7 @@
           //console.log(questionStrings);
           //console.log(answers);
         }, 1000);
-        
+
 
 
 
@@ -30,7 +30,11 @@
 
   <body>
     <div>
-      <div><h1>Examiner</h1></div>
+      <!-- Header -->
+      <div class="header">
+        <img src="logo.png" alt="Logo Placeholder">
+        <h1>Examiner</h1>
+      </div>
       <div><button onclick="goHome()">Return Home</button></div>
       <div id="exam_info_container"></div>
       <div id="exam_area">

@@ -25,5 +25,5 @@
 
   curl_close($ch);
 
-  //echo $json;
+  echo $json;
 ?>
