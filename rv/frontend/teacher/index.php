@@ -29,9 +29,19 @@
         document.getElementById("refresh_question_tab_button").addEventListener("click", function() {
           populateQuestionTab(<?php echo $_SESSION['userId'];?>);
         });
+        document.getElementById("create_question_button").addEventListener("click", function() {
+          openQuestionCreator(<?php echo $_SESSION['userId'];?>);
+        });
+        document.getElementById("close_quest_creator").addEventListener("click", closeQuestionCreator);
+        document.getElementById("close_quest_editor").addEventListener("click", closeQuestionEditor);
         document.getElementById("add_new_test_case_button").addEventListener("click", addTestCaseToNewQuestion);
         document.getElementById("remove_new_test_case_button").addEventListener("click", removeTestCaseToNewQuestion);
-        document.getElementById("create_new_question_button").addEventListener("click", createNewQuestion);
+        document.getElementById("add_edit_new_test_case_button").addEventListener("click", addEditNewTestCase);
+        document.getElementById("remove_edit_new_test_case_button").addEventListener("click", removeEditNewTestCase);
+        document.getElementById("create_new_question_button").addEventListener("click", function() {
+          createNewQuestion(<?php echo $_SESSION['userId'];?>);
+        });
+        getFilterTopics(<?php echo $_SESSION['userId'];?>);
       };
     </script>
   </head>
@@ -47,11 +57,29 @@
       <h2>Question Tab</h2>
       <div id="question_bank_container">
         <h3>Question Bank</h3>
+        <div><input placeholder="Search filtered questions..."></input></div>
+        <div>
+          <div><label for="topic_filter">Filter: Topic</label><select id="topic_filter">
+            <option disabled selected value> -------- </option>
+          </select></div>
+          <div>
+            <label for="difficulty_filter">Filter: Difficulty</label><select id="difficulty_filter">
+              <option disabled selected value> - </option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+          </select></div>
+        </div>
         <div id="question_bank_table_container"></div>
         <div><button id="refresh_question_tab_button">Refresh</button><button id="create_question_button">Create New</button><button id="edit_question_button">Edit</button><button id="delete_question_button">Delete</button></div>
       </div>
       <div id="question_creator_container">
-        <h3>Question Creator</h3>
+        <div id="question_creator_header_container">
+          <div><h3>Question Creator</h3></div>
+          <div><button id="close_quest_creator">X</button></div>
+        </div>
         <div><textarea id="new_question_input" placeholder="question"></textarea></div>
         <div><input id="new_topic_input" placeholder="topic"></div>
         <div><label for="new_function_type">Function Type</label><select id="new_function_type">
@@ -73,7 +101,10 @@
         <div><button id="create_new_question_button">Create Question</button></div>
       </div>
       <div id="question_editor_container">
-        <h3>Question Editor</h3>
+        <div id="question_editor_header_container">
+          <div><h3>Question Editor</h3></div>
+          <div><button id="close_quest_editor">X</button></div>
+        </div>
         <div><textarea id="edit_question_input" placeholder="question"></textarea></div>
         <div><input id="edit_topic_input" placeholder="topic"></div>
         <div><label for="edit_function_type">Function Type</label><select id="edit_function_type">
@@ -89,6 +120,11 @@
           <option value="4">4</option>
           <option value="5">5</option>
         </select></div>
+        <div id="edit_test_case_container"></div>
+        <div id="edit_new_test_case_container"></div>
+        <div><button id="add_edit_new_test_case_button">Add Test Case</button></div>
+        <div><button id="remove_edit_new_test_case_button">Remove Test Case</button></div>
+        <div><button id="save_question_button">Save Question</button></div>
       </div>
     </div>
     <!-- End Question Tab -->
