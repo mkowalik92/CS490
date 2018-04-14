@@ -6,12 +6,14 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="teacher_stylesheet.css">
+    <script src="https://web.njit.edu/~mk343/cs490/rv/logout.js"></script>
     <script src="teacher_script.js"></script>
     <script>
-      window.onload = function() {
+      window.onload = async function() {
+        document.getElementById("logout_button").addEventListener("click", logout);
         // Default tab that is open is questions tab
-        populateQuestionTab(<?php echo $_SESSION['userId'];?>);
-
+        await populateQuestionTab(<?php echo $_SESSION['userId'];?>);
+        //await getFilterTopics(<?php echo $_SESSION['userId'];?>);
         // Code for switching tabs
         var question_tab = document.getElementById("question_tab");
         var exam_tab = document.getElementById("exam_tab");
@@ -41,7 +43,16 @@
         document.getElementById("create_new_question_button").addEventListener("click", function() {
           createNewQuestion(<?php echo $_SESSION['userId'];?>);
         });
-        getFilterTopics(<?php echo $_SESSION['userId'];?>);
+        document.getElementById("topic_filter").addEventListener("change", async function() {
+          await filter();
+        });
+        document.getElementById("difficulty_filter").addEventListener("change", async function() {
+          await filter();
+        });
+        document.getElementById("search_filter").addEventListener("keyup", async function() {
+          //console.log(document.getElementById("search_filter").value);
+          await filter();
+        });
       };
     </script>
   </head>
@@ -57,14 +68,14 @@
       <h2>Question Tab</h2>
       <div id="question_bank_container">
         <h3>Question Bank</h3>
-        <div><input placeholder="Search filtered questions..."></input></div>
+        <div><input id="search_filter" placeholder="Search filtered questions..."></input></div>
         <div>
           <div><label for="topic_filter">Filter: Topic</label><select id="topic_filter">
-            <option disabled selected value> -------- </option>
+            <option value="-"> -------- </option>
           </select></div>
           <div>
             <label for="difficulty_filter">Filter: Difficulty</label><select id="difficulty_filter">
-              <option disabled selected value> - </option>
+              <option value="-"> - </option>
               <option value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -129,7 +140,11 @@
     </div>
     <!-- End Question Tab -->
 
-    <div id="exam_tab"><h2>Exam Tab</h2></div>
+    <div id="exam_tab">
+      <h2>Exam Tab</h2>
+      <div><h3>Exam Bank</h3></div>
+      <div><h3>Exam Grader</h3></div>
+    </div>
 
   </body>
 

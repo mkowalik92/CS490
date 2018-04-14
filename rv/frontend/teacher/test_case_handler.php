@@ -4,24 +4,25 @@
   $actions = array('CREATE', 'READ', 'UPDATEINPUT', 'UPDATEOUTPUT', 'DELETE');
   if(in_array($action, $actions)) {
     if ($action == 'CREATE') {
-      $postData = array( 'action' => $action, 'questionId' => $_POST['questionId'], 'input' => urlencode($_POST['input']), 'output' => urlencode($_POST['output']) );
+      $postData = array( 'action' => $action, 'questionId' => $_POST['questionId'], 'input' => rawurlencode($_POST['input']), 'output' => rawurlencode($_POST['output']) );
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }
       $post_string = implode('&', $post_items);
+      echo $post_string;
     }
     if ($action == 'READ') {
       $post_string = 'action=' . $action;
     }
     if ($action == 'UPDATEINPUT') {
-      $postData = array( 'action' => 'UPDATE', 'testcaseId' => $_POST['testcaseId'], 'column' => 'input', 'value' => urlencode($_POST['input']));
+      $postData = array( 'action' => 'UPDATE', 'testcaseId' => $_POST['testcaseId'], 'column' => 'input', 'value' => rawurlencode($_POST['input']));
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }
       $post_string = implode('&', $post_items);
     }
     if ($action == 'UPDATEOUTPUT') {
-      $postData = array( 'action' => 'UPDATE', 'testcaseId' => $_POST['testcaseId'], 'column' => 'output', 'value' => urlencode($_POST['output']));
+      $postData = array( 'action' => 'UPDATE', 'testcaseId' => $_POST['testcaseId'], 'column' => 'output', 'value' => rawurlencode($_POST['output']));
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }
@@ -35,6 +36,7 @@
       $post_string = implode('&', $post_items);
     }
     $url = 'https://web.njit.edu/~bn62/cs490/crud/testcases.php';
+    //$url = 'https://web.njit.edu/~mni22/CS490/Beta/crud/testcases.php';
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL, $url);
     curl_setopt($ch,CURLOPT_POST, 1);

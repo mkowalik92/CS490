@@ -30,6 +30,7 @@ async function populateQuestionTab(userId) {
   var delete_question_button2 = document.getElementById("delete_question_button");
   const clone2 = delete_question_button2.cloneNode(true);
   delete_question_button2.parentNode.replaceChild(clone2, delete_question_button2);
+  await getFilterTopics(userId);
 }
 
 function selectQuestionQuestTab(thisTR, userId, questionId) {
@@ -123,6 +124,21 @@ async function delete_question_from_quest_bank(questionId, userId) {
     credentials: "include",
     body: "action=DELETE&questionId=" + questionId,
     method: "POST"
+  });
+  const responseTC = await fetch("test_case_handler.php", {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+    credentials: "include",
+    body: "action=READ",
+    method: "POST"
+  });
+  const responseTCJSON = await responseTC.json();
+  responseTCJSON.forEach((testcase) => {
+    if (testcase.questionId != questionId) return;
+    if (testcase.questionId == questionId) {
+      deleteTestCase(testcase.testcaseId, userId, questionId);
+    }
   });
   await populateQuestionTab(userId);
   closeQuestionEditor();
@@ -239,6 +255,7 @@ async function createNewTestCase(questionId, input, output) {
     body: "action=CREATE&questionId=" + questionId + "&input=" + input + "&output=" + output,
     method: "POST"
   });
+  //console.log(await response.text());
 }
 
 async function updateTestCaseInput(testcaseId, input) {
@@ -332,6 +349,24 @@ async function saveQuestion(questionId, userId) {
 }
 
 async function getFilterTopics(userId) {
+  var select = document.getElementById("topic_filter");
+  var length = select.options.length;
+  for (i = 1; i < length; i++) {
+    select.remove(length - i);
+  }
+  var topic_filter = document.getElementById("topic_filter");
+  const clone = topic_filter.cloneNode(true);
+  topic_filter.parentNode.replaceChild(clone, topic_filter);
+  document.getElementById("topic_filter").addEventListener("change", async function() {
+    await filter();
+  });
+  var difficulty_filter = document.getElementById("difficulty_filter");
+  const clone1 = difficulty_filter.cloneNode(true);
+  difficulty_filter.parentNode.replaceChild(clone1, difficulty_filter);
+  document.getElementById("difficulty_filter").addEventListener("change", async function() {
+    await filter();
+  });
+  document.getElementById("search_filter").value = "";
   const response = await fetch("question_handler.php", {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
@@ -340,15 +375,121 @@ async function getFilterTopics(userId) {
     body: "action=READ",
     method: "POST"
   });
+  var topics = [];
   const responseJSON = await response.json();
   responseJSON.forEach((question) => {
     if (question.instructorId != userId) return;
-    if (question.instructorId == userId) {
+    if ((question.instructorId == userId) && (topics.indexOf(question.topic) == -1)) {
       var x = document.getElementById("topic_filter");
       var option = document.createElement("option");
+      topics.push(question.topic);
       option.text = question.topic;
       x.add(option);
     }
   });
 }
+
+/*async function filter() {
+  const topic = document.getElementById("topic_filter").value;
+  var table = document.getElementById("question_bank_table"), tr, i;
+  if ((document.getElementById("topic_filter").value == "-") && (document.getElementById("difficulty_filter").value == "-")) {
+    for (i = 1; i < table.rows.length; i++) {
+      table.rows[i].style.display = "";
+    }
+  } else if (document.getElementById("difficulty_filter").value != "-") {
+    if (document.getElementById("topic_filter").value != "-") {
+      for (i = 1; i < table.rows.length; i++) {
+        if ((table.rows[i].cells[2].innerHTML === topic) && (table.rows[i].cells[3].innerHTML === document.getElementById("difficulty_filter").value)) {
+          table.rows[i].style.display = "";
+        } else {
+          table.rows[i].style.display = "none";
+        }
+      }
+    } else {
+      for (i = 1; i < table.rows.length; i++) {
+        if (table.rows[i].cells[3].innerHTML === document.getElementById("difficulty_filter").value) {
+          table.rows[i].style.display = "";
+        } else {
+          table.rows[i].style.display = "none";
+        }
+      }
+    }
+  } else {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[2].innerHTML === topic) {
+        table.rows[i].style.display = "";
+      } else {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+}*/
+
+/*async function filter() {
+  const search =  document.getElementById("search_filter").value.toUpperCase();
+  const topic = document.getElementById("topic_filter").value;
+  const difficulty = document.getElementById("difficulty_filter").value;
+  var table = document.getElementById("question_bank_table"), i;
+  if ((search === "") && (topic === "-") && (difficulty === "-")) {
+    for (i = 1; i < table.rows.length; i++) {
+      table.rows[i].style.display = "";
+    }
+  } else {
+    if (topic != "-") {
+      for (i = 1; i < table.rows.length; i++) {
+        if (table.rows[i].cells[2].innerHTML != topic) {
+          table.rows[i].style.display = "none";
+        }
+      }
+    }
+    if (difficulty != "-") {
+      for (i = 1; i < table.rows.length; i++) {
+        if (table.rows[i].cells[3].innerHTML != difficulty) {
+          table.rows[i].style.display = "none";
+        }
+      }
+    }
+    if (search != "") {
+      for (i = 1; i < table.rows.length; i++) {
+        if (table.rows[i].cells[1].innerHTML.toUpperCase().indexOf(search) === (-1)) {
+          table.rows[i].style.display = "none";
+        }
+      }
+    }
+  }
+}*/
+
+async function filter() {
+  const search =  document.getElementById("search_filter").value.toUpperCase();
+  const topic = document.getElementById("topic_filter").value;
+  const difficulty = document.getElementById("difficulty_filter").value;
+  var table = document.getElementById("question_bank_table"), i;
+  for (i = 1; i < table.rows.length; i++) {
+    table.rows[i].style.display = "";
+  }
+  if (topic != "-") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[2].innerHTML != topic) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+  if (difficulty != "-") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[3].innerHTML != difficulty) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+  if (search != "") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[1].innerHTML.toUpperCase().indexOf(search) === (-1)) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+}
 // End Question Tab Functions
+
+// Start Exam Tab Functions
+// End Exam Tab Functions
