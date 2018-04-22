@@ -4,11 +4,12 @@
   $actions = array('CREATE', 'READ', 'UPDATEQUESTION', 'UPDATETOPIC', 'UPDATEDIFFICULTY', 'DELETE');
   if(in_array($action, $actions)) {
     if ($action == 'CREATE') {
-      $postData = array( 'action' => $action, 'instructorId' => $_SESSION['userId'], 'question' => urlencode($_POST['question']), 'topic' => $_POST['topic'], 'difficultyLevel' => $_POST['difficultyLevel']);
+      $postData = array( 'action' => $action, 'instructorId' => $_SESSION['userId'], 'question' => urlencode($_POST['question']), 'topic' => $_POST['topic'], 'difficultyLevel' => $_POST['difficultyLevel'], 'functionName' => $_POST['functionName']);
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }
       $post_string = implode('&', $post_items);
+      echo $post_string;
     }
     if ($action == 'READ') {
       $post_string = 'action=' . $action;
