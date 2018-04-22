@@ -1,0 +1,14 @@
+textarea {
+  font-family: Consolas;
+  tab-size: 4;
+}
+
+#examiner_holder {
+  display: flex;
+  flex-direction: row;
+}
+
+#answer_area_container {
+  display: none;
+  grid-template-columns: auto;
+}
