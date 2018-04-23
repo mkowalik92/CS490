@@ -14,11 +14,12 @@
 
 		if($_POST['action'] == 'CREATE'){
 			
-			$q = "INSERT INTO questions (instructorId, question, topic, difficultyLevel) VALUES
+			$q = "INSERT INTO questions (instructorId, question, topic, difficultyLevel, functionName) VALUES
 			('".$_POST['instructorId']."',
 			'".mysqli_real_escape_string($dbc, $_POST['question'])."', 
 			'".mysqli_real_escape_string($dbc, $_POST['topic'])."',
-			'".$_POST['difficultyLevel']."')";
+			'".$_POST['difficultyLevel']."',
+			'".$_POST['functionName']."')";
 			
 			$r = @mysqli_query($dbc, $q);
 

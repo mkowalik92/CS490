@@ -14,13 +14,15 @@
 
 		if($_POST['action'] == 'CREATE'){
 			
-			$q = "INSERT INTO answers (questionId, studentId, answer, notes, pointsAwarded, isCorrect) VALUES
-			('".$_POST['questionId']."',
+			$q = "INSERT INTO answers (examId, questionId, studentId, answer, notes, pointsAwarded, isCorrect, json) VALUES
+			('".$_POST['examId']."',
+			'".$_POST['questionId']."',
 			'".$_POST['studentId']."',
 			'".mysqli_real_escape_string($dbc, $_POST['answer'])."', 
 			'".mysqli_real_escape_string($dbc, $_POST['notes'])."',
 			'".$_POST['pointsAwarded']."',
-			'".$_POST['isCorrect']."')";
+			'".$_POST['isCorrect']."',
+			'".$_POST['json']."')";
 			
 			$r = @mysqli_query($dbc, $q);
 
