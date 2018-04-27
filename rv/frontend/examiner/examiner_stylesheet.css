@@ -1,14 +1,58 @@
 textarea {
   font-family: Consolas;
   tab-size: 4;
+  width: 350px;
+  height: 210px;
+}
+
+table {
+  border: 2px solid #555;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  background-color: #C8D3CE;
+}
+
+td {
+  cursor: pointer;
+}
+
+tr {
+  background-color:#FFFFFF;
+}
+
+td:hover {
+  background-color: #f2f2f2;
+}
+
+tr:hover td {
+  background-color: #f2f2f2;
+}
+
+#submit_exam_button {
+  margin: 3px 3px 3px;
 }
 
 #examiner_holder {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+}
+
+#question_bank_table_container {
+  border: 2px solid #555;
+}
+
+#question_bank_container {
+  margin: 5px 5px 5px;
 }
 
 #answer_area_container {
+  margin-left: 20px;
   display: none;
   grid-template-columns: auto;
+  justify-items: center;
 }

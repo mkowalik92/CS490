@@ -91,6 +91,7 @@ async function selectQuestion(thisTR, userId, questionId, points) {
   save_answer_button = document.getElementById("save_answer_button");
   save_answer_button.addEventListener("click", function() {
     answers[questionId] = encodeURIComponent(document.getElementById("answer_textarea").value);
+    alert("Answer Saved!");
   });
   if(typeof answers[questionId] != 'undefined') {
     var answer = decodeURIComponent(answers[questionId]);

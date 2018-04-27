@@ -6,6 +6,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="examiner_stylesheet.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
     <script src="examiner_script.js"></script>
     <script>
       window.onload = async function() {
@@ -26,7 +27,6 @@
           clearAnswersTable();
         });
         document.getElementById("get_answers_table_button").addEventListener("click", getAnswersTable);
-        // End code for IDE
       };
 
     </script>
@@ -45,7 +45,7 @@
       <!-- examiner holder -->
       <div id="examiner_holder">
         <!-- question bank holder  -->
-        <div>
+        <div id="question_bank_table_container">
           <div id="question_bank_container"></div>
           <div><button id="submit_exam_button">Submit Exam</button></div>
         </div>
