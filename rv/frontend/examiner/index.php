@@ -23,10 +23,10 @@
             return false;
           }
         });
-        document.getElementById("clear_answers_table_button").addEventListener("click", async function() {
-          clearAnswersTable();
-        });
-        document.getElementById("get_answers_table_button").addEventListener("click", getAnswersTable);
+        // document.getElementById("clear_answers_table_button").addEventListener("click", async function() {
+        //   clearAnswersTable();
+        // });
+        // document.getElementById("get_answers_table_button").addEventListener("click", getAnswersTable);
       };
 
     </script>
@@ -34,8 +34,8 @@
 
   <body>
     <div>
-      <div><button id="get_answers_table_button">Get Answers Table</button></div>
-      <div><button id="clear_answers_table_button">Clear Answers Table</button></div>
+      <!-- <div><button id="get_answers_table_button">Get Answers Table</button></div>
+      <div><button id="clear_answers_table_button">Clear Answers Table</button></div> -->
 
       <!-- header -->
       <div>

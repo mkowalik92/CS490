@@ -121,26 +121,30 @@ async function submitAnswers(userId, examId){
     method: "POST"
   });
   const responseJSON = await response.text();
+  const response2 = await fetch("https://web.njit.edu/~mk343/cs490/rv/teacher/student_exam_handler.php", {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+    credentials: "include",
+    body: "action=READ",
+    method: "POST"
+  });
+  const response2JSON = await response2.json();
+  for (var i = 0; i < response2JSON.length; i++) {
+    if (response2JSON[i].examId != examId || response2JSON[i].studentId != userId) continue;
+    await fetch("https://web.njit.edu/~mk343/cs490/rv/teacher/student_exam_handler.php", {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+      credentials: "include",
+      body: "action=UPDATEEXAMSUBMITTED&studentExamId=" + response2JSON[i].studentExamId,
+      method: "POST"
+    });
+  }
+  window.location.href = "https://web.njit.edu/~mk343/cs490/rv/student";
   console.log(responseJSON);
 
 
-  // var xhttp = new XMLHttpRequest();
-  // xhttp.onreadystatechange = function() {
-  //   if (this.readyState == 4 && this.status == 200) {
-  //     let res = this.responseText;
-  //     console.log("PHP RESPONSE\n\n" + res);
-  //     getStudentExamId(studentId, examId);
-  //     setTimeout(function(){
-  //       submitExam();
-  //       window.location.href = "https://web.njit.edu/~mk343/cs490/student/";
-  //     }, 2000);
-  //
-  //
-  //   }
-  // };
-  // xhttp.open("POST", "submit_answers.php", true);
-  // xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  // xhttp.send("studentId="+studentId+"&examId="+examId+"&questions="+JSON.stringify(questions));
 }
 
 async function clearAnswersTable() {
@@ -178,8 +182,4 @@ async function getAnswersTable() {
   });
   const responseJSON = await response.json();
   console.log(responseJSON);
-}
-
-async function submitExam() {
-  console.log("submit exam clicked");
 }
