@@ -1,0 +1,51 @@
+
+
+#logo {
+  height: 256px;
+  width: 256px;
+}
+
+#body_container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+#login_form_container {
+  display: grid;
+  grid-template-columns: auto;
+  justify-items: center;
+  grid-row-gap: 5px;
+}
+
+#login_button {
+  border: none;
+  padding: 3px 7px 5px;
+  font-family: 'Roboto', sans-serif;
+}
+
+#login_button:hover {
+  box-shadow: 0 6px 8px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+#username_input {
+  font-family: 'Roboto', sans-serif;
+  background-image: url('user.png');
+}
+
+#password_input {
+  font-family: 'Roboto', sans-serif;
+  background-image: url('pass.png');
+}
+
+#wrong_password_message_container {
+  font-family: 'Roboto', sans-serif;
+}
+
+.login_input {
+  background-position: 5px 5px;
+  background-repeat: no-repeat;
+  background-size: 10px 10px;
+  padding-left: 20px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
