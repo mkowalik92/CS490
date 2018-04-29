@@ -1,0 +1,64 @@
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+button {
+  font-family: 'Roboto', sans-serif;
+}
+
+h2 {
+  margin: 10px 0 10px;
+}
+
+table {
+  border: 2px solid #555;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+th {
+  background-color: #C8D3CE;
+  padding: 2px 2px 2px;
+}
+
+td {
+  cursor: pointer;
+  padding: 2px 2px 2px;
+}
+
+tr {
+  background-color:#FFFFFF;
+}
+
+td:hover {
+  background-color: #f2f2f2;
+}
+
+tr:hover td {
+  background-color: #f2f2f2;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-column-gap: 5px;
+  margin: 5px 5px 5px;
+}
+
+#exam_banks_container {
+  margin-top: 5px;
+  display: grid;
+  grid-template-columns: 200px 200px;
+  grid-column-gap: 5px;
+}
+
+#available_exams {
+  border: 2px solid #555;
+  text-align: center;
+}
+
+#graded_exams {
+  border: 2px solid #555;
+  text-align: center;
+}
