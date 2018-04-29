@@ -1,0 +1,18 @@
+textarea {
+  font-family: Consolas;
+  tab-size: 4;
+  width: 350px;
+  height: 210px;
+}
+
+input {
+  width: 35px;
+}
+
+.question p {
+  border: 1px solid black;
+}
+
+.testcase {
+  border: 1px solid black;
+}
