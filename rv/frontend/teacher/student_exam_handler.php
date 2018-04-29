@@ -1,13 +1,20 @@
 <?php
   session_start();
   $action = $_POST['action'];
-  $actions = array('READ', 'CREATE');
+  $actions = array('READ', 'CREATE', 'UPDATEEXAMSUBMITTED');
   if(in_array($action, $actions)) {
     if ($action == 'READ') {
       $post_string = 'action=' . $action;
     }
     if ($action == 'CREATE') {
       $postData = array( 'action' => $action, 'studentId' => $_POST['studentId'], 'examId' => $_POST['examId'], 'examSubmitted' => 0);
+      foreach ($postData as $key => $value) {
+        $post_items[] = $key . '=' . $value;
+      }
+      $post_string = implode('&', $post_items);
+    }
+    if ($action == 'UPDATEEXAMSUBMITTED') {
+      $postData = array( 'action' => 'UPDATE', 'studentExamId' => $_POST['studentExamId'], 'column' => 'examSubmitted', 'value' => 1);
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }

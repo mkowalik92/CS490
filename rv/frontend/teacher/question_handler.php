@@ -1,7 +1,7 @@
 <?php
   session_start();
   $action = $_POST['action'];
-  $actions = array('CREATE', 'READ', 'UPDATEQUESTION', 'UPDATETOPIC', 'UPDATEDIFFICULTY', 'DELETE');
+  $actions = array('CREATE', 'READ', 'UPDATEQUESTION', 'UPDATETOPIC', 'UPDATEDIFFICULTY', 'UPDATEFUNCTIONNAME', 'DELETE');
   if(in_array($action, $actions)) {
     if ($action == 'CREATE') {
       $postData = array( 'action' => $action, 'instructorId' => $_SESSION['userId'], 'question' => urlencode($_POST['question']), 'topic' => $_POST['topic'], 'difficultyLevel' => $_POST['difficultyLevel'], 'functionName' => $_POST['functionName']);
@@ -30,6 +30,13 @@
     }
     if ($action == 'UPDATEDIFFICULTY') {
       $postData = array( 'action' => 'UPDATE', 'questionId' => $_POST['questionId'], 'column' => 'difficultyLevel', 'value' => $_POST['difficultyLevel']);
+      foreach ($postData as $key => $value) {
+        $post_items[] = $key . '=' . $value;
+      }
+      $post_string = implode('&', $post_items);
+    }
+    if ($action == 'UPDATEFUNCTIONNAME') {
+      $postData = array( 'action' => 'UPDATE', 'questionId' => $_POST['questionId'], 'column' => 'functionName', 'value' => $_POST['functionName']);
       foreach ($postData as $key => $value) {
         $post_items[] = $key . '=' . $value;
       }

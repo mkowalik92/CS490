@@ -224,7 +224,6 @@ async function createNewQuestion(userId) {
     body: "action=CREATE&question=" + encodeURIComponent(document.getElementById("new_question_input").value) + "&topic=" + document.getElementById("new_topic_input").value + "&difficultyLevel=" + document.getElementById("new_difficulty_input").value + "&functionName=" + document.getElementById("new_function_name_input").value,
     method: "POST"
   });
-  console.log(await response.text());
   const responseREAD = await fetch("question_handler.php", {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
@@ -253,7 +252,6 @@ async function createNewTestCase(questionId, input, output) {
     body: "action=CREATE&questionId=" + questionId + "&input=" + input + "&output=" + output,
     method: "POST"
   });
-  //console.log(await response.text());
 }
 
 async function updateTestCaseInput(testcaseId, input) {
@@ -313,6 +311,14 @@ async function saveQuestion(questionId, userId) {
       },
     credentials: "include",
     body: "action=UPDATEDIFFICULTY&questionId=" + questionId + "&difficultyLevel=" + document.getElementById("edit_difficulty_input").value,
+    method: "POST"
+  });
+  const responseFunctionName = await fetch("question_handler.php", {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+    credentials: "include",
+    body: "action=UPDATEFUNCTIONNAME&questionId=" + questionId + "&functionName=" + document.getElementById("edit_function_name_input").value,
     method: "POST"
   });
 
@@ -417,6 +423,78 @@ async function filter() {
     }
   }
 }
+// Exam Question Bank Filter code
+async function getExamFilterTopics(userId) {
+  var select = document.getElementById("exam_topic_filter");
+  var length = select.options.length;
+  for (i = 1; i < length; i++) {
+    select.remove(length - i);
+  }
+  var exam_topic_filter = document.getElementById("exam_topic_filter");
+  const clone = exam_topic_filter.cloneNode(true);
+  exam_topic_filter.parentNode.replaceChild(clone, exam_topic_filter);
+  document.getElementById("exam_topic_filter").addEventListener("change", async function() {
+    await examfilter();
+  });
+  var exam_difficulty_filter = document.getElementById("exam_difficulty_filter");
+  const clone1 = exam_difficulty_filter.cloneNode(true);
+  exam_difficulty_filter.parentNode.replaceChild(clone1, exam_difficulty_filter);
+  document.getElementById("exam_difficulty_filter").addEventListener("change", async function() {
+    await examfilter();
+  });
+  document.getElementById("exam_search_filter").value = "";
+  const response = await fetch("question_handler.php", {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+    credentials: "include",
+    body: "action=READ",
+    method: "POST"
+  });
+  var topics = [];
+  const responseJSON = await response.json();
+  responseJSON.forEach((question) => {
+    if (question.instructorId != userId) return;
+    if ((question.instructorId == userId) && (topics.indexOf(question.topic) == -1)) {
+      var x = document.getElementById("exam_topic_filter");
+      var option = document.createElement("option");
+      topics.push(question.topic);
+      option.text = question.topic;
+      x.add(option);
+    }
+  });
+}
+
+async function examfilter() {
+  const search =  document.getElementById("exam_search_filter").value.toUpperCase();
+  const topic = document.getElementById("exam_topic_filter").value;
+  const difficulty = document.getElementById("exam_difficulty_filter").value;
+  var table = document.getElementById("exam_creator_question_bank_table"), i;
+  for (i = 1; i < table.rows.length; i++) {
+    table.rows[i].style.display = "";
+  }
+  if (topic != "-") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[2].innerHTML != topic) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+  if (difficulty != "-") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[3].innerHTML != difficulty) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+  if (search != "") {
+    for (i = 1; i < table.rows.length; i++) {
+      if (table.rows[i].cells[1].innerHTML.toUpperCase().indexOf(search) === (-1)) {
+        table.rows[i].style.display = "none";
+      }
+    }
+  }
+}
 // End Question Tab Functions
 
 // Start Exam Tab Functions
@@ -443,7 +521,7 @@ async function populateExamTab(userId) {
     if (exam.instructorId != userId) return;
     if (exam.gradeVisible > 0) {
       gradedExamIds.push(examId);
-      return;
+      //return;
     }
     const tbody = document.getElementById("exam_bank_table").tBodies[0];
     const tr = tbody.appendChild(document.createElement("tr"));
@@ -467,7 +545,7 @@ async function populateExamTab(userId) {
       const tbody = document.getElementById("graded_exam_bank_table").tBodies[0];
       const tr = tbody.appendChild(document.createElement("tr"));
       tr.addEventListener("click", function() {
-        selectExamGrader(tr, userId, student_exam.examId);
+        selectExamGrader(tr, userId, student_exam.examId, student_exam.studentId);
       });
       tr.innerHTML = `<td>${student_exam.examId}</td><td>${student_exam.studentId}</td>`;
     }
@@ -493,6 +571,7 @@ function selectExamBank(thisTR, userId, examId) {
   publish_exam_button = document.getElementById("publish_exam_button");
   publish_exam_button.addEventListener("click", function() {
     publishExam(examId);
+    alert("Exam " + examId + " published!");
   });
 }
 
@@ -508,10 +587,36 @@ async function deleteExam(userId, examId) {
   await populateExamTab(userId);
 }
 
-function selectExamGrader(thisTR, userId, examId) {
+function selectExamGrader(thisTR, userId, examId, studentId) {
   const otherTRs = Array.from(thisTR.parentElement.children).filter(tr => tr !== thisTR);
   otherTRs.forEach(otherTR => otherTR.style.backgroundColor = "#FFFFFF");
   thisTR.style.backgroundColor = "#D0D1D8";
+  // preview grade button Code
+  var preview_grade_button = document.getElementById("preview_grade_button");
+  const clone = preview_grade_button.cloneNode(true);
+  preview_grade_button.parentNode.replaceChild(clone, preview_grade_button);
+  preview_grade_button = document.getElementById("preview_grade_button");
+  preview_grade_button.addEventListener("click", async function() {
+    //await function updating examId
+    await fetch("edit_results_handler.php", {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+        },
+      credentials: "include",
+      body: "examId=" + examId + "&studentId=" + studentId,
+      method: "POST"
+    });
+    window.location.href = "https://web.njit.edu/~mk343/cs490/rv/teacher/editresults/";
+  });
+  // release grade button Code
+  var release_grade_button = document.getElementById("release_grade_button");
+  const clone2 = release_grade_button.cloneNode(true);
+  release_grade_button.parentNode.replaceChild(clone2, release_grade_button);
+  release_grade_button = document.getElementById("release_grade_button");
+  release_grade_button.addEventListener("click", async function() {
+    await releaseGrade(examId);
+    await populateExamTab(userId);
+  });
 }
 
 async function openExamCreator(userId) {
@@ -539,6 +644,7 @@ async function openExamCreator(userId) {
     tr.innerHTML = `<td>${questionId}</td><td>${question.question}</td><td>${question.topic}</td><td>${question.difficultyLevel}</td>`;
   });
   document.getElementById("exam_creator").style.display = "block";
+  await getExamFilterTopics(userId);
 }
 
 function selectQuestionExamCreator(thisTR, userId, questionId, question, topic, difficultyLevel) {
@@ -763,7 +869,14 @@ async function publishExam(examId) {
   }
 }
 
-async function saveExam(userId) {
-  //console.log(userId);
+async function releaseGrade(examId) {
+  const response = await fetch("exam_handler.php", {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+      },
+    credentials: "include",
+    body: "action=UPDATEGRADEVISIBLE&examId=" + examId,
+    method: "POST"
+  });
 }
 // End Exam Tab Functions

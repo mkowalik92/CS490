@@ -6,6 +6,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="teacher_stylesheet.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300" rel="stylesheet">
     <script src="https://web.njit.edu/~mk343/cs490/rv/logout.js"></script>
     <script src="teacher_script.js"></script>
     <script>
@@ -14,7 +15,6 @@
         // Default tab that is open is questions tab
         await populateQuestionTab(<?php echo $_SESSION['userId'];?>);
         await populateExamTab(<?php echo $_SESSION['userId'];?>);
-        //await getFilterTopics();
         // Code for switching tabs
         var question_tab = document.getElementById("question_tab");
         var exam_tab = document.getElementById("exam_tab");
@@ -51,8 +51,16 @@
           await filter();
         });
         document.getElementById("search_filter").addEventListener("keyup", async function() {
-          //console.log(document.getElementById("search_filter").value);
           await filter();
+        });
+        document.getElementById("exam_topic_filter").addEventListener("change", async function() {
+          await examfilter();
+        });
+        document.getElementById("exam_difficulty_filter").addEventListener("change", async function() {
+          await examfilter();
+        });
+        document.getElementById("exam_search_filter").addEventListener("keyup", async function() {
+          await examfilter();
         });
         // exam bank code Start
         document.getElementById("refresh_exam_bank_button").addEventListener("click", async function() {
@@ -75,7 +83,7 @@
 
   <body>
 
-    <div id="header"><h1>Teacher</h1></div>
+    <div id="header"><h1><?php echo $_SESSION['fname'];?>'s Instructor Hub</h1></div>
 
     <div id="nav_bar_container"><button id="question_tab_nav_button">Questions</button><button id="exam_tab_nav_button">Exams</button><button id="logout_button">Logout</button></div>
 
@@ -100,63 +108,67 @@
           </select></div>
         </div>
         <div id="question_bank_table_container"></div>
-        <div><button id="refresh_question_tab_button">Refresh</button><button id="create_question_button">Create New</button><button id="edit_question_button">Edit</button><button id="delete_question_button">Delete</button></div>
+        <div class="buttons"><button id="refresh_question_tab_button">Refresh</button><button id="create_question_button">Create New</button><button id="edit_question_button">Edit</button><button id="delete_question_button">Delete</button></div>
       </div>
-      <div id="question_creator_container">
-        <div class="creator_editor_header_container">
-          <div><h3>Question Creator</h3></div>
-          <div><button id="close_quest_creator">X</button></div>
+      <div id="question_cre_edi_container">
+        <div id="question_creator_container">
+          <div class="creator_editor_header_container">
+            <div><h3>Question Creator</h3></div>
+            <div><button id="close_quest_creator">X</button></div>
+          </div>
+          <div class="question_input"><textarea id="new_question_input" placeholder="question"></textarea></div>
+          <div><input id="new_topic_input" placeholder="topic"></div>
+          <div><input id="new_function_name_input" placeholder="function name (optional)"></div>
+          <div><label for="new_difficulty_input">Difficulty</label><select id="new_difficulty_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select></div>
+          <div id="new_test_case_container"></div>
+          <div><button id="add_new_test_case_button">Add Test Case</button></div>
+          <div><button id="remove_new_test_case_button">Remove Test Case</button></div>
+          <div><button id="create_new_question_button">Create Question</button></div>
         </div>
-        <div><textarea id="new_question_input" placeholder="question"></textarea></div>
-        <div><input id="new_topic_input" placeholder="topic"></div>
-        <div><input id="new_function_name_input" placeholder="function name (optional)"></div>
-        <div><label for="new_difficulty_input">Difficulty</label><select id="new_difficulty_input">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select></div>
-        <div id="new_test_case_container"></div>
-        <div><button id="add_new_test_case_button">Add Test Case</button></div>
-        <div><button id="remove_new_test_case_button">Remove Test Case</button></div>
-        <div><button id="create_new_question_button">Create Question</button></div>
-      </div>
-      <div id="question_editor_container">
-        <div class="creator_editor_header_container">
-          <div><h3>Question Editor</h3></div>
-          <div><button id="close_quest_editor">X</button></div>
+        <div id="question_editor_container">
+          <div class="creator_editor_header_container">
+            <div><h3>Question Editor</h3></div>
+            <div><button id="close_quest_editor">X</button></div>
+          </div>
+          <div class="question_input"><textarea id="edit_question_input" placeholder="question"></textarea></div>
+          <div><input id="edit_topic_input" placeholder="topic"></div>
+          <div><input id="edit_function_name_input" placeholder="function name (optional)"></div>
+          <div><label for="edit_difficulty_input">Difficulty</label><select id="edit_difficulty_input">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select></div>
+          <div id="edit_test_case_container"></div>
+          <div id="edit_new_test_case_container"></div>
+          <div><button id="add_edit_new_test_case_button">Add Test Case</button></div>
+          <div><button id="remove_edit_new_test_case_button">Remove Test Case</button></div>
+          <div><button id="save_question_button">Save Question</button></div>
         </div>
-        <div><textarea id="edit_question_input" placeholder="question"></textarea></div>
-        <div><input id="edit_topic_input" placeholder="topic"></div>
-        <div><input id="edit_function_name_input" placeholder="function name (optional)"></div>
-        <div><label for="edit_difficulty_input">Difficulty</label><select id="edit_difficulty_input">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-        </select></div>
-        <div id="edit_test_case_container"></div>
-        <div id="edit_new_test_case_container"></div>
-        <div><button id="add_edit_new_test_case_button">Add Test Case</button></div>
-        <div><button id="remove_edit_new_test_case_button">Remove Test Case</button></div>
-        <div><button id="save_question_button">Save Question</button></div>
       </div>
     </div>
     <!-- End Question Tab -->
 
     <div id="exam_tab">
       <h2>Exam Tab</h2>
-      <div>
-        <h3>Exam Bank</h3>
-        <div id="exam_bank_container"></div>
-        <div><button id="refresh_exam_bank_button">Refresh</button><button id="create_exam_bank_button">Create</button><button id="">Edit</button><button id="delete_exam_button">Delete</button><button id="publish_exam_button">Publish</button></div>
-      </div>
-      <div>
-        <h3>Exam Grader</h3>
-        <div id="graded_exam_bank_container"></div>
-        <div><button id="refresh_graded_exam_bank_button">Refresh</button><button id="">Preview & Edit Grade</button><button id="">Release Grade</button></div>
+      <div id="exam_tab_container">
+        <div id="exam_bank">
+          <h3>Exam Bank</h3>
+          <div id="exam_bank_container"></div>
+          <div class="buttons"><button id="refresh_exam_bank_button">Refresh</button><button id="create_exam_bank_button">Create</button><!--button id="">Edit</button--><button id="delete_exam_button">Delete</button><button id="publish_exam_button">Publish</button></div>
+        </div>
+        <div id="exam_grader">
+          <h3>Exam Grader</h3>
+          <div id="graded_exam_bank_container"></div>
+          <div class="buttons2"><button id="refresh_graded_exam_bank_button">Refresh</button><button id="preview_grade_button">Preview & Edit Grade</button><button id="release_grade_button">Release Grade</button></div>
+        </div>
       </div>
       <div id="exam_creator">
         <div class="creator_editor_header_container">

@@ -36,7 +36,6 @@
       $post_string = implode('&', $post_items);
     }
     $url = 'https://web.njit.edu/~bn62/cs490/crud/testcases.php';
-    //$url = 'https://web.njit.edu/~mni22/CS490/Beta/crud/testcases.php';
     $ch = curl_init();
     curl_setopt($ch,CURLOPT_URL, $url);
     curl_setopt($ch,CURLOPT_POST, 1);
